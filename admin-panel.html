@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASSAGE PRO - Админ панель</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Orbitron:wght@400;700;900&family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #2d2d2d;
+            --accent: #ff6b35;
+            --accent-hover: #e55a2b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-light: #ffffff;
+            --text-gray: #9ca3af;
+            --border: rgba(255, 255, 255, 0.1);
+            --gradient: linear-gradient(135deg, #ff6b35, #c1272d);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--primary);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Auth Screen */
+        .auth-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+        }
+
+        .auth-form {
+            background: rgba(45, 45, 45, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .auth-logo {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-gray);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .auth-btn {
+            width: 100%;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+        }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .admin-header {
+            background: var(--secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logout-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        .admin-sidebar {
+            width: 280px;
+            background: var(--secondary);
+            border-right: 1px solid var(--border);
+            padding: 2rem 0;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: rgba(255, 107, 53, 0.1);
+            color: var(--accent);
+            border-right: 3px solid var(--accent);
+        }
+
+        .admin-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Cards */
+        .admin-card {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--gradient);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Forms */
+        .admin-form {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .admin-form input,
+        .admin-form select,
+        .admin-form textarea {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .admin-form input:focus,
+        .admin-form select:focus,
+        .admin-form textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--text-light);
+            border: 1px solid var(--border);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Tables */
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--secondary);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .admin-table th {
+            background: rgba(255, 107, 53, 0.1);
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .admin-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Photo Management */
+        .photo-preview, .logo-preview {
+            width: 150px;
+            height: 150px;
+            border: 2px dashed var(--border);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-preview img, .logo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 13px;
+        }
+
+        .photo-placeholder, .logo-placeholder {
+            text-align: center;
+            color: var(--text-gray);
+        }
+
+        .photo-placeholder i, .logo-placeholder i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            min-height: 150px;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .remove-btn {
+            opacity: 1;
+        }
+
+        .gallery-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-gray);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .image-upload-progress {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 2rem;
+            z-index: 10000;
+            display: none;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Color Picker */
+        .color-picker-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .color-picker-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .color-picker-item input[type="color"] {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            cursor: pointer;
+        }
+
+        .color-picker-item label {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        /* Font Preview */
+        .font-preview {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .font-preview h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .admin-container {
+                flex-direction: column;
+            }
+
+            .admin-sidebar {
+                width: 100%;
+                padding: 1rem 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success-msg {
+            background: var(--success);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .success-msg.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Image Category Styles */
+        .category-selector {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-tab {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-tab.active {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .category-gallery {
+            display: none;
+        }
+
+        .category-gallery.active {
+            display: block;
+        }
+
+        /* Analytics Styles */
+        .analytics-chart {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .analytics-data {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .analytics-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .analytics-item h4 {
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .analytics-item p {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Backup Styles */
+        .backup-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .backup-info {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .backup-info p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Screen -->
+    <div id="authScreen" class="auth-screen">
+        <div class="auth-form">
+            <div class="auth-logo">MASSAGE PRO</div>
+            <h2>Вход в админ-панель</h2>
+            <p style="color: var(--text-gray); margin-bottom: 2rem;">Введите пароль для доступа</p>
+            
+            <form id="authForm">
+                <div class="form-group">
+                    <label for="adminPassword">Пароль администратора</label>
+                    <input type="password" id="adminPassword" placeholder="Введите пароль" required>
+                </div>
+                <button type="submit" class="auth-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Войти
+                </button>
+            </form>
+            <div id="authError" class="error-msg"></div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-panel">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="admin-logo">MASSAGE PRO - АДМИН</div>
+            <div class="admin-user">
+                <span>Администратор</span>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Выйти
+                </button>
+            </div>
+        </header>
+
+        <div class="admin-container">
+            <!-- Sidebar -->
+            <nav class="admin-sidebar">
+                <ul class="sidebar-menu">
+                    <li class="sidebar-item">
+                        <a class="sidebar-link active" onclick="showSection('dashboard')">
+                            <i class="fas fa-chart-pie"></i>
+                            Дашборд
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" onclick="showSection('bookings')">
+                            <i class="fas fa-calendar-check"></i>
+                            Записи
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" onclick="showSection('schedule')">
+                            <i class="fas fa-clock"></i>
+                            Расписание
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" onclick="showSection('content')">
+                            <i class="fas fa-edit"></i>
+                            Контент сайта
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" onclick="showSection('services')">
+                            <i class="fas fa-spa"></i>
+                            Услуги
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" onclick="showSection('design')">
+                            <i class="fas fa-paint-brush"></i>
+                            Дизайн
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" onclick="showSection('analytics')">
+                            <i class="fas fa-chart-line"></i>
+                            Аналитика
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" onclick="showSection('settings')">
+                            <i class="fas fa-cog"></i>
+                            Настройки
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Content -->
+            <main class="admin-content">
+                <!-- Dashboard -->
+                <section id="dashboard" class="content-section active">
+                    <h1 class="section-title">Панель управления</h1>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number" id="totalBookings">0</span>
+                            <span class="stat-label">Всего записей</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number" id="todayBookings">0</span>
+                            <span class="stat-label">Записей сегодня</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number" id="monthRevenue">₪0</span>
+                            <span class="stat-label">Доход за месяц</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number" id="avgRating">5.0</span>
+                            <span class="stat-label">Средняя оценка</span>
+                        </div>
+                    </div>
+
+                    <div class="admin-card">
+                        <h3 class="card-title">Ближайшие записи</h3>
+                        <div id="upcomingBookings">
+                            <!-- Будет заполнено JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Bookings -->
+                <section id="bookings" class="content-section">
+                    <h1 class="section-title">Управление записями</h1>
+                    
+                    <div class="admin-card">
+                        <h3 class="card-title">Все записи</h3>
+                        <div style="overflow-x: auto;">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Клиент</th>
+                                        <th>Телефон</th>
+                                        <th>Дата</th>
+                                        <th>Время</th>
+                                        <th>Услуга</th>
+                                        <th>Сумма</th>
+                                        <th>Статус</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bookingsTable">
+                                    <!-- Будет заполнено JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Schedule -->
+                <section id="schedule" class="content-section">
+                    <h1 class="section-title">Управление расписанием</h1>
+                    
+                    <div class="admin-card">
+                        <h3 class="card-title">Рабочее время</h3>
+                        <form class="admin-form" id="scheduleForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Начало работы</label>
+                                    <input type="time" id="workStart" value="09:00">
+                                </div>
+                                <div class="form-group">
+                                    <label>Конец работы</label>
+                                    <input type="time" id="workEnd" value="21:00">
+                                </div>
+                                <div class="form-group">
+                                    <label>Длительность слота (мин)</label>
+                                    <input type="number" id="slotDuration" value="60" min="15" max="180" step="15">
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-success" onclick="saveSchedule()">
+                                <i class="fas fa-save"></i>
+                                Сохранить расписание
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="admin-card">
+                        <h3 class="card-title">Перерывы</h3>
+                        <div id="breaksList">
+                            <!-- Будет заполнено JS -->
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="addBreak()">
+                            <i class="fas fa-plus"></i>
+                            Добавить перерыв
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Content Management -->
+                <section id="content" class="content-section">
+                    <h1 class="section-title">Управление контентом</h1>
+                    
+                    <div id="contentSuccess" class="success-msg">
+                        Контент успешно сохранен!
+                    </div>
+
+                    <!-- Photo Management with Categories -->
+                    <div class="admin-card">
+                        <h3 class="card-title">📸 Управление фотографиями</h3>
+                        
+                        <!-- Profile Photo -->
+                        <div style="margin-bottom: 2rem;">
+                            <label style="display: block; margin-bottom: 1rem; font-weight: 600;">Ваше фото (профиль)</label>
+                            <div style="display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap;">
+                                <div class="photo-preview" id="profilePhotoPreview">
+                                    <div class="photo-placeholder">
+                                        <i class="fas fa-user-md"></i>
+                                        <span>Загрузите ваше фото</span>
+                                    </div>
+                                </div>
+                                <div style="flex: 1; min-width: 300px;">
+                                    <input type="file" id="profilePhotoInput" accept="image/*" style="margin-bottom: 1rem; padding: 0.5rem; background: rgba(255,255,255,0.1); border: 1px solid var(--border); border-radius: 8px; color: var(--text-light); width: 100%;">
+                                    <button type="button" class="btn btn-primary" onclick="uploadProfilePhoto()" style="margin-right: 1rem;">
+                                        <i class="fas fa-upload"></i>
+                                        Загрузить фото
+                                    </button>
+                                    <button type="button" class="btn btn-danger" onclick="removeProfilePhoto()">
+                                        <i class="fas fa-trash"></i>
+                                        Удалить
+                                    </button>
+                                    <p style="color: var(--text-gray); font-size: 0.9rem; margin-top: 1rem;">
+                                        Рекомендуемый размер: 400x400px или больше. Форматы: JPG, PNG, WebP
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gallery with Categories -->
+                        <div style="margin-bottom: 2rem;">
+                            <label style="display: block; margin-bottom: 1rem; font-weight: 600;">Галерея работ (до 12 фото)</label>
+                            
+                            <div class="category-selector">
+                                <label>Выберите категорию для загрузки:</label>
+                                <select id="imageCategory" style="margin-left: 1rem;">
+                                    <option value="cabinet">Кабинет</option>
+                                    <option value="procedures">Процедуры</option>
+                                    <option value="results">Результаты</option>
+                                </select>
+                            </div>
+
+                            <div class="category-tabs">
+                                <div class="category-tab active" onclick="showGalleryCategory('all')">Все фото</div>
+                                <div class="category-tab" onclick="showGalleryCategory('cabinet')">Кабинет</div>
+                                <div class="category-tab" onclick="showGalleryCategory('procedures')">Процедуры</div>
+                                <div class="category-tab" onclick="showGalleryCategory('results')">Результаты</div>
+                            </div>
+
+                            <div class="gallery-grid" id="galleryGrid">
+                                <!-- Gallery photos will be displayed here -->
+                            </div>
+
+                            <div style="margin-top: 1rem;">
+                                <input type="file" id="galleryPhotoInput" accept="image/*" multiple style="margin-bottom: 1rem; padding: 0.5rem; background: rgba(255,255,255,0.1); border: 1px solid var(--border); border-radius: 8px; color: var(--text-light); width: 100%;">
+                                <button type="button" class="btn btn-primary" onclick="uploadGalleryPhotos()">
+                                    <i class="fas fa-images"></i>
+                                    Добавить в галерею
+                                </button>
+                                <p style="color: var(--text-gray); font-size: 0.9rem; margin-top: 0.5rem;">
+                                    Максимум 12 фото. Выберите несколько фото процедур, кабинета, результатов работы
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Logo Upload -->
+                        <div style="margin-bottom: 2rem;">
+                            <label style="display: block; margin-bottom: 1rem; font-weight: 600;">Логотип салона (опционально)</label>
+                            <div style="display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap;">
+                                <div class="logo-preview" id="logoPreview">
+                                    <div class="logo-placeholder">
+                                        <i class="fas fa-image"></i>
+                                        <span>Логотип</span>
+                                    </div>
+                                </div>
+                                <div style="flex: 1; min-width: 300px;">
+                                    <input type="file" id="logoInput" accept="image/*" style="margin-bottom: 1rem; padding: 0.5rem; background: rgba(255,255,255,0.1); border: 1px solid var(--border); border-radius: 8px; color: var(--text-light); width: 100%;">
+                                    <button type="button" class="btn btn-primary" onclick="uploadLogo()" style="margin-right: 1rem;">
+                                        <i class="fas fa-upload"></i>
+                                        Загрузить логотип
+                                    </button>
+                                    <button type="button" class="btn btn-danger" onclick="removeLogo()">
+                                        <i class="fas fa-trash"></i>
+                                        Удалить
+                                    </button>
+                                    <p style="color: var(--text-gray); font-size: 0.9rem; margin-top: 1rem;">
+                                        Рекомендуемый размер: 200x80px. Прозрачный фон (PNG)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Text Content -->
+                    <div class="admin-card">
+                        <h3 class="card-title">📝 Текстовая информация</h3>
+                        <form class="admin-form" id="contentForm">
+                            <div class="form-group">
+                                <label>Название салона</label>
+                                <input type="text" id="businessName" placeholder="MASSAGE PRO">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Телефон</label>
+                                    <input type="tel" id="businessPhone" placeholder="+972-50-123-4567">
+                                </div>
+                                <div class="form-group">
+                                    <label>WhatsApp</label>
+                                    <input type="tel" id="whatsappPhone" placeholder="972501234567">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Адрес</label>
+                                <input type="text" id="businessAddress" placeholder="ул. Дизенгоф 125, Тель-Авив">
+                            </div>
+                            <div class="form-group">
+                                <label>Описание "Обо мне"</label>
+                                <textarea id="aboutText" rows="5" placeholder="Расскажите о себе..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Девиз/Слоган</label>
+                                <input type="text" id="businessSlogan" placeholder="Восстановление • Релаксация • Здоровье">
+                            </div>
+                            <button type="button" class="btn btn-success" onclick="saveContent()">
+                                <i class="fas fa-save"></i>
+                                Сохранить контент
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Services -->
+                <section id="services" class="content-section">
+                    <h1 class="section-title">Управление услугами</h1>
+                    
+                    <div class="admin-card">
+                        <h3 class="card-title">Список услуг</h3>
+                        <div id="servicesList">
+                            <!-- Будет заполнено JS -->
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="addService()">
+                            <i class="fas fa-plus"></i>
+                            Добавить услугу
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Design Settings -->
+                <section id="design" class="content-section">
+                    <h1 class="section-title">Настройки дизайна</h1>
+                    
+                    <div class="admin-card">
+                        <h3 class="card-title">🎨 Цветовая схема</h3>
+                        <div class="color-picker-group">
+                            <div class="color-picker-item">
+                                <input type="color" id="colorPrimary" value="#ff6b35">
+                                <label>Основной цвет</label>
+                            </div>
+                            <div class="color-picker-item">
+                                <input type="color" id="colorSecondary" value="#c1272d">
+                                <label>Дополнительный цвет</label>
+                            </div>
+                            <div class="color-picker-item">
+                                <input type="color" id="colorBackground" value="#1a1a1a">
+                                <label>Цвет фона</label>
+                            </div>
+                            <div class="color-picker-item">
+                                <input type="color" id="colorText" value="#ffffff">
+                                <label>Цвет текста</label>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="applyColors()">
+                            <i class="fas fa-palette"></i>
+                            Применить цвета
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="resetColors()">
+                            <i class="fas fa-undo"></i>
+                            Сбросить по умолчанию
+                        </button>
+                    </div>
+
+                    <div class="admin-card">
+                        <h3 class="card-title">📝 Настройки шрифтов</h3>
+                        <form class="admin-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Основной шрифт</label>
+                                    <select id="fontMain">
+                                        <option value="Roboto">Roboto (по умолчанию)</option>
+                                        <option value="Montserrat">Montserrat</option>
+                                        <option value="Open Sans">Open Sans</option>
+                                        <option value="Lato">Lato</option>
+                                        <option value="Poppins">Poppins</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Шрифт заголовков</label>
+                                    <select id="fontHeading">
+                                        <option value="Bebas Neue">Bebas Neue (по умолчанию)</option>
+                                        <option value="Playfair Display">Playfair Display</option>
+                                        <option value="Oswald">Oswald</option>
+                                        <option value="Russo One">Russo One</option>
+                                        <option value="Anton">Anton</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="font-preview">
+                                <h3 id="fontPreviewHeading" style="font-family: 'Bebas Neue'; font-size: 2rem;">Пример заголовка</h3>
+                                <p id="fontPreviewText" style="font-family: 'Roboto';">Пример основного текста для проверки шрифта</p>
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="applyFonts()">
+                                <i class="fas fa-font"></i>
+                                Применить шрифты
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Analytics -->
+                <section id="analytics" class="content-section">
+                    <h1 class="section-title">Аналитика</h1>
+                    
+                    <div class="admin-card">
+                        <h3 class="card-title">📊 Статистика за месяц</h3>
+                        <div class="analytics-chart">
+                            <p style="color: var(--text-gray);">График записей (имитация)</p>
+                        </div>
+                        <div class="analytics-data">
+                            <div class="analytics-item">
+                                <h4>Популярная услуга</h4>
+                                <p id="popularService">Спортивный массаж</p>
+                            </div>
+                            <div class="analytics-item">
+                                <h4>Средний чек</h4>
+                                <p id="avgCheck">₪210</p>
+                            </div>
+                            <div class="analytics-item">
+                                <h4>Конверсия</h4>
+                                <p id="conversionRate">78%</p>
+                            </div>
+                            <div class="analytics-item">
+                                <h4>Загруженность</h4>
+                                <p id="busyRate">85%</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings -->
+                <section id="settings" class="content-section">
+                    <h1 class="section-title">Настройки системы</h1>
+                    
+                    <div class="admin-card">
+                        <h3 class="card-title">Общие настройки</h3>
+                        <form class="admin-form" id="settingsForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Автоподтверждение записей</label>
+                                    <select id="autoConfirm">
+                                        <option value="true">Включено</option>
+                                        <option value="false">Выключено</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Максимум дней для записи</label>
+                                    <input type="number" id="maxBookingDays" value="30" min="1" max="365">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Пароль администратора</label>
+                                <input type="password" id="newAdminPassword" placeholder="Новый пароль">
+                            </div>
+                            <button type="button" class="btn btn-success" onclick="saveSettings()">
+                                <i class="fas fa-save"></i>
+                                Сохранить настройки
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="admin-card">
+                        <h3 class="card-title">💾 Резервное копирование</h3>
+                        <div class="backup-info">
+                            <p>Создайте резервную копию всех данных сайта или восстановите из файла</p>
+                        </div>
+                        <div class="backup-actions">
+                            <button type="button" class="btn btn-primary" onclick="exportData()">
+                                <i class="fas fa-download"></i>
+                                Экспорт данных
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="importData()">
+                                <i class="fas fa-upload"></i>
+                                Импорт данных
+                            </button>
+                        </div>
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Progress Modal -->
+    <div class="image-upload-progress" id="uploadProgressModal">
+        <div>
+            <i class="fas fa-upload" style="font-size: 2rem; color: var(--accent); margin-bottom: 1rem;"></i>
+            <h3>Загрузка изображения...</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div id="progressText">0%</div>
+        </div>
+    </div>
+
+    <!-- Connect to external admin JS file -->
+    <script src="assets/js/admin-panel.js"></script>
+    
+    <!-- Авторизация скрипт -->
+    <script>
+        // Инициализация после загрузки страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Проверка, если уже залогинен
+            const savedAuth = localStorage.getItem('massageAdminAuth');
+            if (savedAuth) {
+                const authData = JSON.parse(savedAuth);
+                if (authData.timestamp > Date.now() - 24 * 60 * 60 * 1000) {
+                    document.getElementById('authScreen').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    return;
+                }
+            }
+
+            // Обработчик формы входа
+            document.getElementById('authForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const passwordInput = document.getElementById('adminPassword');
+                const errorDiv = document.getElementById('authError');
+                const password = passwordInput.value;
+                
+                // Правильный пароль
+                if (password === 'massage2025') {
+                    // Сохранение авторизации
+                    localStorage.setItem('massageAdminAuth', JSON.stringify({
+                        timestamp: Date.now(),
+                        user: 'admin'
+                    }));
+                    
+                    // Показ админки
+                    document.getElementById('authScreen').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    
+                    // Загрузка данных
+                    if (typeof adminPanel !== 'undefined') {
+                        adminPanel.loadDashboard();
+                    }
+                } else {
+                    errorDiv.textContent = 'Неверный пароль!';
+                    passwordInput.value = '';
+                }
+            });
+        });
+
+        // Функция выхода
+        function logout() {
+            localStorage.removeItem('massageAdminAuth');
+            location.reload();
+        }
+    </script>
+</body>
+</html>

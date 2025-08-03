@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASSAGE PRO - Профессиональный массаж в Тель-Авиве</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Профессиональный массаж в Тель-Авиве. Классический, спортивный, релакс массаж. Онлайн запись, удобное расписание.">
+    <meta name="keywords" content="массаж, массажист, Тель-Авив, спортивный массаж, релакс, классический массаж">
+    <meta name="author" content="MASSAGE PRO">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="MASSAGE PRO - Профессиональный массаж">
+    <meta property="og:description" content="Запишитесь на профессиональный массаж в Тель-Авиве">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/images/og-image.jpg">
+    
+    <!-- Fonts & Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@100;300;400;700;900&family=Orbitron:wght@400;700;900&family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&family=Oswald:wght@400;700&family=Russo+One&family=Anton&display=swap" rel="stylesheet">
+    
+    <!-- Main Styles -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Dynamic Theme Styles -->
+    <style id="dynamicThemeStyles"></style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">MASSAGE PRO</div>
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Загрузка...</div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <nav class="nav-container">
+            <div class="logo" id="siteLogo">
+                <span class="logo-3d">MASSAGE</span>
+                <span class="logo-accent">PRO</span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link">Главная</a></li>
+                <li><a href="#services" class="nav-link">Услуги</a></li>
+                <li><a href="#booking" class="nav-link">Запись</a></li>
+                <li><a href="#about" class="nav-link">Обо мне</a></li>
+                <li><a href="#contact" class="nav-link">Контакты</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span class="hamburger"></span>
+                <span class="hamburger"></span>
+                <span class="hamburger"></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-bg-layers">
+            <div class="hero-layer-1"></div>
+            <div class="hero-layer-2"></div>
+            <div class="hero-layer-3"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge">ПРОФЕССИОНАЛЬНЫЙ МАССАЖ</div>
+            <h1 class="hero-title">
+                <span class="title-3d">MASSAGE</span>
+                <span class="title-gradient">PROFESSIONAL</span>
+            </h1>
+            <p class="hero-subtitle" id="heroSlogan">Восстановление • Релаксация • Здоровье • Красота</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Довольных клиентов</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Лет опыта</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Техник массажа</div>
+                </div>
+            </div>
+            <div class="hero-buttons">
+                <a href="#booking" class="cta-button primary">
+                    <span>Записаться сейчас</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+                <a href="#services" class="cta-button secondary">
+                    <span>Услуги и цены</span>
+                </a>
+            </div>
+        </div>
+        <div class="hero-floating-elements">
+            <div class="floating-element element-1"></div>
+            <div class="floating-element element-2"></div>
+            <div class="floating-element element-3"></div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">НАШИ УСЛУГИ</div>
+                <h2 class="section-title">Профессиональные<br><span class="title-accent">массажные техники</span></h2>
+                <p class="section-subtitle">Индивидуальный подход к каждому клиенту с использованием современных методик</p>
+            </div>
+            
+            <div class="services-grid" id="servicesGrid">
+                <!-- Services will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section id="booking" class="booking">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">ОНЛАЙН ЗАПИСЬ</div>
+                <h2 class="section-title">Запишитесь на<br><span class="title-accent">сеанс массажа</span></h2>
+            </div>
+
+            <div class="booking-container">
+                <div class="booking-steps">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Выберите услугу</div>
+                    </div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Дата и время</div>
+                    </div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Контакты</div>
+                    </div>
+                    <div class="step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Подтверждение</div>
+                    </div>
+                </div>
+
+                <div class="booking-form-container">
+                    <!-- Step 1: Service Selection -->
+                    <div class="booking-step step-1 active">
+                        <h3>Выберите тип массажа</h3>
+                        <div class="service-selector" id="serviceSelector">
+                            <!-- Services will be loaded dynamically -->
+                        </div>
+                        <button class="next-step-btn" onclick="nextBookingStep()" disabled>
+                            Далее <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Step 2: Date & Time Selection -->
+                    <div class="booking-step step-2">
+                        <h3>Выберите дату и время</h3>
+                        <div class="datetime-selector">
+                            <div class="calendar-container">
+                                <div class="calendar-header">
+                                    <button class="calendar-nav prev" onclick="prevMonth()">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <div class="calendar-title" id="calendarTitle">Август 2025</div>
+                                    <button class="calendar-nav next" onclick="nextMonth()">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                                <div class="calendar-grid" id="calendarGrid">
+                                    <!-- Calendar will be generated by JS -->
+                                </div>
+                            </div>
+                            <div class="time-slots-container">
+                                <h4>Доступное время</h4>
+                                <div class="time-slots" id="timeSlots">
+                                    <!-- Time slots will be generated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-buttons">
+                            <button class="prev-step-btn" onclick="prevBookingStep()">
+                                <i class="fas fa-arrow-left"></i> Назад
+                            </button>
+                            <button class="next-step-btn" onclick="nextBookingStep()" disabled>
+                                Далее <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Contact Info -->
+                    <div class="booking-step step-3">
+                        <h3>Контактная информация</h3>
+                        <form class="contact-form" id="contactForm">
+                            <div class="form-group">
+                                <label for="clientName">Имя</label>
+                                <input type="text" id="clientName" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="clientPhone">Номер телефона</label>
+                                <input type="tel" id="clientPhone" name="phone" placeholder="+972-XX-XXX-XXXX" required>
+                            </div>
+                            <div class="form-group optional">
+                                <label for="clientNotes">Дополнительная информация</label>
+                                <textarea id="clientNotes" name="notes" placeholder="Особые пожелания или медицинские противопоказания..."></textarea>
+                            </div>
+                        </form>
+                        <div class="step-buttons">
+                            <button class="prev-step-btn" onclick="prevBookingStep()">
+                                <i class="fas fa-arrow-left"></i> Назад
+                            </button>
+                            <button class="next-step-btn" onclick="nextBookingStep()">
+                                Далее <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Confirmation -->
+                    <div class="booking-step step-4">
+                        <h3>Подтверждение записи</h3>
+                        <div class="booking-summary" id="bookingSummary">
+                            <!-- Summary will be generated by JS -->
+                        </div>
+                        <div class="confirmation-actions">
+                            <button class="prev-step-btn" onclick="prevBookingStep()">
+                                <i class="fas fa-arrow-left"></i> Назад
+                            </button>
+                            <button class="confirm-booking-btn" onclick="confirmBooking()">
+                                <span>Подтвердить запись</span>
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <div class="section-badge">ОБО МНЕ</div>
+                    <h2 class="section-title">Профессионал с<br><span class="title-accent">8-летним опытом</span></h2>
+                    <p class="about-description" id="aboutDescription">
+                        Меня зовут <strong>Александр</strong>, и я сертифицированный массажист с международным образованием. 
+                        Специализируюсь на лечебном, спортивном массаже и реабилитации.
+                    </p>
+                    
+                    <div class="credentials">
+                        <div class="credential-item">
+                            <i class="fas fa-certificate"></i>
+                            <div>
+                                <h4>Сертификаты</h4>
+                                <p>Международная академия массажа Тель-Авив</p>
+                            </div>
+                        </div>
+                        <div class="credential-item">
+                            <i class="fas fa-award"></i>
+                            <div>
+                                <h4>Специализации</h4>
+                                <p>Лечебный, спортивный, миофасциальный массаж</p>
+                            </div>
+                        </div>
+                        <div class="credential-item">
+                            <i class="fas fa-users"></i>
+                            <div>
+                                <h4>Опыт работы</h4>
+                                <p>Более 500 довольных клиентов</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-stats">
+                        <div class="stat-box">
+                            <div class="stat-number">8+</div>
+                            <div class="stat-label">лет опыта</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">500+</div>
+                            <div class="stat-label">клиентов</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">15</div>
+                            <div class="stat-label">техник</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-visual">
+                    <div class="about-image-container">
+                        <div class="about-image" id="profileImageContainer">
+                            <img src="assets/images/masseur-photo.jpg" alt="Массажист" id="profileImage" style="display: none;">
+                            <div class="image-placeholder" id="profilePlaceholder">
+                                <i class="fas fa-user-md"></i>
+                                <span>Фото массажиста</span>
+                            </div>
+                        </div>
+                        <div class="about-decorations">
+                            <div class="decoration-1"></div>
+                            <div class="decoration-2"></div>
+                            <div class="decoration-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">КОНТАКТЫ</div>
+                <h2 class="section-title">Свяжитесь<br><span class="title-accent">со мной</span></h2>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h3>Адрес</h3>
+                        <p id="businessAddress">ул. Дизенгоф 125<br>Тель-Авив, Израиль</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h3>Телефон</h3>
+                        <p id="businessPhone">+972-50-123-4567</p>
+                        <a href="tel:+972501234567" class="contact-link" id="phoneLink">Позвонить</a>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h3>WhatsApp</h3>
+                        <p>Быстрая связь</p>
+                        <a href="https://wa.me/972501234567" class="contact-link whatsapp-link" id="whatsappLink">Написать</a>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h3>Режим работы</h3>
+                        <p id="workingHours">Пн-Пт: 9:00-21:00<br>Сб-Вс: 10:00-20:00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo" id="footerLogo">
+                    <span class="logo-3d">MASSAGE</span>
+                    <span class="logo-accent">PRO</span>
+                </div>
+                <div class="footer-text">
+                    <p>&copy; 2025 MASSAGE PRO. Все права защищены.</p>
+                    <p>Профессиональный массаж в Тель-Авиве</p>
+                </div>
+                <div class="footer-social">
+                    <a href="https://wa.me/972501234567" class="social-link" id="footerWhatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="tel:+972501234567" class="social-link" id="footerPhone">
+                        <i class="fas fa-phone"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>Запись успешно создана!</h3>
+            <p id="successMessage"></p>
+            <button onclick="closeModal()" class="modal-btn">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/smart-calendar.js"></script>
+    <script src="assets/js/notifications.js"></script>
+    <script src="assets/js/image-manager-pro.js"></script>
+    <script src="assets/js/booking-system.js"></script>
+    
+    <!-- Initialization Script -->
+    <script>
+        // Global variables for new systems
+        let smartCalendar;
+        let notificationSystem;
+        let imageManager;
+        
+        // Initialize after DOM loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize smart calendar
+            smartCalendar = new SmartCalendar();
+            
+            // Initialize notification system
+            notificationSystem = new NotificationSystem();
+            
+            // Initialize image manager
+            imageManager = window.imageManager || new ImageManagerPro();
+            
+            // Load saved content
+            loadSavedContent();
+            
+            // Load saved images
+            loadSavedImages();
+            
+            // Load services
+            loadServices();
+            
+            // Override calendar generation
+            window.generateCalendar = function() {
+                if (smartCalendar) {
+                    smartCalendar.generateEnhancedCalendar();
+                }
+            };
+            
+            // Enhanced booking confirmation
+            const originalConfirmBooking = window.confirmBooking;
+            window.confirmBooking = async function() {
+                const bookingData = {
+                    service: selectedService,
+                    date: selectedDate,
+                    time: selectedTime,
+                    client: {
+                        name: document.getElementById('clientName').value,
+                        phone: document.getElementById('clientPhone').value,
+                        notes: document.getElementById('clientNotes').value
+                    }
+                };
+
+                const result = await window.bookingSystem.createBooking(bookingData);
+                
+                if (result.success) {
+                    // Schedule notifications
+                    notificationSystem.scheduleBookingNotifications(result.booking);
+                    
+                    // Show success modal
+                    showEnhancedSuccessModal(result.booking);
+                    
+                    // Reset form
+                    if (typeof resetBookingForm === 'function') {
+                        resetBookingForm();
+                    }
+                } else {
+                    alert(`Ошибка при создании записи: ${result.error}`);
+                }
+            };
+        });
+
+        // Load saved content
+        function loadSavedContent() {
+            const savedContent = localStorage.getItem('massageContent');
+            if (savedContent) {
+                updateSiteContent(JSON.parse(savedContent));
+            }
+        }
+
+        // Load saved images
+        function loadSavedImages() {
+            const savedImages = localStorage.getItem('massageImages');
+            if (savedImages) {
+                updateSiteImages(JSON.parse(savedImages));
+            }
+        }
+
+        // Load services
+        function loadServices() {
+            const savedServices = localStorage.getItem('massageServices');
+            const services = savedServices ? JSON.parse(savedServices) : {
+                classic: { name: 'Классический массаж', price: 180, duration: 60, icon: 'fas fa-hand-paper' },
+                sports: { name: 'Спортивный массаж', price: 220, duration: 60, icon: 'fas fa-dumbbell' },
+                relax: { name: 'Релакс массаж', price: 200, duration: 75, icon: 'fas fa-spa' },
+                deep: { name: 'Глубокий массаж', price: 250, duration: 60, icon: 'fas fa-fire' }
+            };
+            
+            // Update services grid
+            const servicesGrid = document.getElementById('servicesGrid');
+            if (servicesGrid) {
+                servicesGrid.innerHTML = Object.keys(services).map(key => {
+                    const service = services[key];
+                    return `
+                        <div class="service-card" data-service="${key}">
+                            <div class="card-glow"></div>
+                            ${key === 'sports' ? '<div class="featured-badge">ПОПУЛЯРНЫЙ</div>' : ''}
+                            <div class="service-icon">
+                                <i class="${service.icon}"></i>
+                            </div>
+                            <h3 class="service-name">${service.name}</h3>
+                            <div class="service-price">
+                                <span class="price-amount">₪${service.price}</span>
+                                <span class="price-duration">${service.duration} мин</span>
+                            </div>
+                            <p class="service-description">
+                                ${getServiceDescription(key)}
+                            </p>
+                            <ul class="service-benefits">
+                                ${getServiceBenefits(key)}
+                            </ul>
+                            <button class="book-btn" onclick="selectService('${key}', '${service.name}', ${service.price})">
+                                <span>Выбрать</span>
+                                <i class="fas fa-calendar-plus"></i>
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            // Update service selector
+            const serviceSelector = document.getElementById('serviceSelector');
+            if (serviceSelector) {
+                serviceSelector.innerHTML = Object.keys(services).map(key => {
+                    const service = services[key];
+                    return `
+                        <div class="service-option" data-service="${key}">
+                            <div class="service-icon"><i class="${service.icon}"></i></div>
+                            <div class="service-info">
+                                <div class="service-name">${service.name}</div>
+                                <div class="service-price">₪${service.price} • ${service.duration} мин</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                // Re-attach event listeners
+                document.querySelectorAll('.service-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        selectServiceOption(this);
+                    });
+                });
+            }
+        }
+
+        // Helper functions
+        function getServiceDescription(key) {
+            const descriptions = {
+                classic: 'Традиционный лечебный массаж для общего оздоровления и расслабления',
+                sports: 'Специализированный массаж для спортсменов и активных людей',
+                relax: 'Расслабляющий массаж для снятия стресса и напряжения',
+                deep: 'Интенсивная работа с глубокими мышечными слоями'
+            };
+            return descriptions[key] || '';
+        }
+
+        function getServiceBenefits(key) {
+            const benefits = {
+                classic: ['Улучшение кровообращения', 'Снятие мышечного напряжения', 'Общее расслабление'],
+                sports: ['Восстановление после тренировок', 'Профилактика травм', 'Повышение выносливости'],
+                relax: ['Глубокое расслабление', 'Снятие стресса', 'Улучшение сна'],
+                deep: ['Работа с хроническими зажимами', 'Восстановление подвижности', 'Длительный эффект']
+            };
+            return (benefits[key] || []).map(b => `<li>${b}</li>`).join('');
+        }
+
+        function showEnhancedSuccessModal(booking) {
+            const modal = document.getElementById('successModal');
+            const message = document.getElementById('successMessage');
+            
+            if (modal && message) {
+                const dateStr = new Date(booking.date).toLocaleDateString('ru-RU', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                message.innerHTML = `
+                    <div class="success-details">
+                        <p><strong>Номер записи:</strong> ${booking.id}</p>
+                        <p><strong>Дата и время:</strong> ${dateStr}, ${booking.time}</p>
+                        <p><strong>Услуга:</strong> ${booking.service.name}</p>
+                        <p><strong>Стоимость:</strong> ₪${booking.service.price}</p>
+                        <br>
+                        <p>📱 Подтверждение отправлено в WhatsApp</p>
+                        <p>⏰ Напоминание будет отправлено за день до визита</p>
+                        <p>🙏 Благодарность придет после сеанса</p>
+                    </div>
+                `;
+                modal.classList.add('show');
+            }
+        }
+
+        // Update site content
+        function updateSiteContent(content) {
+            // Update business name
+            if (content.businessName) {
+                const parts = content.businessName.split(' ');
+                document.querySelectorAll('.logo-3d').forEach(el => {
+                    el.textContent = parts[0] || 'MASSAGE';
+                });
+                document.querySelectorAll('.logo-accent').forEach(el => {
+                    el.textContent = parts[1] || 'PRO';
+                });
+            }
+
+            // Update phone
+            if (content.businessPhone) {
+                document.getElementById('businessPhone').textContent = content.businessPhone;
+                const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+                phoneLinks.forEach(link => {
+                    link.href = `tel:${content.businessPhone.replace(/\D/g, '')}`;
+                });
+            }
+
+            // Update WhatsApp
+            if (content.whatsappPhone) {
+                const whatsappLinks = document.querySelectorAll('a[href*="wa.me"]');
+                whatsappLinks.forEach(link => {
+                    link.href = `https://wa.me/${content.whatsappPhone}`;
+                });
+            }
+
+            // Update address
+            if (content.businessAddress) {
+                document.getElementById('businessAddress').innerHTML = content.businessAddress.replace(',', '<br>');
+            }
+
+            // Update about
+            if (content.aboutText) {
+                document.getElementById('aboutDescription').innerHTML = content.aboutText;
+            }
+
+            // Update slogan
+            if (content.businessSlogan) {
+                document.getElementById('heroSlogan').textContent = content.businessSlogan;
+            }
+        }
+
+        // Update site images
+        function updateSiteImages(images) {
+            // Profile photo
+            if (images.profile && images.profile.length > 0) {
+                const profileImg = document.getElementById('profileImage');
+                const placeholder = document.getElementById('profilePlaceholder');
+                
+                if (profileImg && placeholder) {
+                    profileImg.src = images.profile[0].optimized;
+                    profileImg.style.display = 'block';
+                    placeholder.style.display = 'none';
+                }
+            }
+
+            // Logo
+            if (images.logo && images.logo.length > 0) {
+                updateSiteLogo(images.logo[0].optimized);
+            }
+
+            // Gallery
+            if (images.gallery && images.gallery.length > 0) {
+                createGallerySection(images.gallery);
+            }
+
+            // Cabinet
+            if (images.cabinet && images.cabinet.length > 0) {
+                createCabinetSection(images.cabinet);
+            }
+
+            // Certificates
+            if (images.certificates && images.certificates.length > 0) {
+                createCertificatesSection(images.certificates);
+            }
+        }
+
+        function updateSiteLogo(logoData) {
+            const logos = document.querySelectorAll('#siteLogo, #footerLogo');
+            logos.forEach(logo => {
+                logo.innerHTML = `<img src="${logoData}" alt="Logo" style="height: 50px; width: auto;">`;
+            });
+        }
+
+        function createGallerySection(galleryImages) {
+            let gallerySection = document.getElementById('gallery');
+            
+            if (!gallerySection) {
+                gallerySection = document.createElement('section');
+                gallerySection.id = 'gallery';
+                gallerySection.className = 'gallery-section';
+                gallerySection.style.cssText = `
+                    padding: 6rem 0;
+                    background: var(--secondary-dark);
+                    position: relative;
+                `;
+                
+                gallerySection.innerHTML = `
+                    <div class="container">
+                        <div class="section-header">
+                            <div class="section-badge">ГАЛЕРЕЯ РАБОТ</div>
+                            <h2 class="section-title">Результаты<br><span class="title-accent">профессиональной работы</span></h2>
+                            <p class="section-subtitle">Фотографии выполненных процедур и довольных клиентов</p>
+                        </div>
+                        <div class="gallery-grid-main" id="galleryGridMain"></div>
+                    </div>
+                `;
+                
+                const contactSection = document.getElementById('contact');
+                contactSection.parentNode.insertBefore(gallerySection, contactSection);
+                
+                addNavigationLink('gallery', 'Галерея', 'contact');
+            }
+            
+            const galleryGrid = document.getElementById('galleryGridMain');
+            if (galleryGrid) {
+                imageManager.createImageGallery(galleryImages, 'galleryGridMain');
+            }
+            
+            window.galleryImages = galleryImages;
+        }
+
+        function createCabinetSection(cabinetImages) {
+            // Similar to gallery but for cabinet photos
+            let cabinetSection = document.getElementById('cabinet');
+            
+            if (!cabinetSection && cabinetImages.length > 0) {
+                cabinetSection = document.createElement('section');
+                cabinetSection.id = 'cabinet';
+                cabinetSection.className = 'cabinet-section';
+                cabinetSection.style.cssText = `
+                    padding: 6rem 0;
+                    background: var(--primary-dark);
+                    position: relative;
+                `;
+                
+                cabinetSection.innerHTML = `
+                    <div class="container">
+                        <div class="section-header">
+                            <div class="section-badge">НАШЕ ПРОСТРАНСТВО</div>
+                            <h2 class="section-title">Комфортный<br><span class="title-accent">массажный кабинет</span></h2>
+                            <p class="section-subtitle">Уютная атмосфера для полного расслабления</p>
+                        </div>
+                        <div class="cabinet-grid" id="cabinetGrid"></div>
+                    </div>
+                `;
+                
+                const aboutSection = document.getElementById('about');
+                aboutSection.parentNode.insertBefore(cabinetSection, aboutSection.nextSibling);
+                
+                addNavigationLink('cabinet', 'Кабинет', 'about');
+            }
+            
+            const cabinetGrid = document.getElementById('cabinetGrid');
+            if (cabinetGrid) {
+                imageManager.createImageGallery(cabinetImages, 'cabinetGrid');
+            }
+            
+            window.cabinetImages = cabinetImages;
+        }
+
+        function createCertificatesSection(certificates) {
+            // Create certificates showcase
+            // Implementation similar to gallery
+        }
+
+        function addNavigationLink(sectionId, linkText, insertBefore) {
+            const navMenu = document.getElementById('navMenu');
+            const beforeElement = navMenu.querySelector(`a[href="#${insertBefore}"]`);
+            
+            if (beforeElement && !navMenu.querySelector(`a[href="#${sectionId}"]`)) {
+                const navItem = document.createElement('li');
+                navItem.innerHTML = `<a href="#${sectionId}" class="nav-link">${linkText}</a>`;
+                beforeElement.parentNode.parentNode.insertBefore(navItem, beforeElement.parentNode);
+            }
+        }
+
+        // Listen for updates from admin panel
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'updateContent') {
+                updateSiteContent(event.data.content);
+            } else if (event.data.type === 'updateImages') {
+                updateSiteImages(event.data.images);
+            } else if (event.data.type === 'updateTheme') {
+                applyTheme(event.data.theme);
+            }
+        });
+
+        // Apply theme
+        function applyTheme(theme) {
+            const styles = document.getElementById('dynamicThemeStyles');
+            if (styles) {
+                styles.textContent = theme.css;
+            }
+        }
+    </script>
+</body>
+</html>
