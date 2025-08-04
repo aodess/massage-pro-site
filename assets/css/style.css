@@ -893,3 +893,477 @@ section {
         font-size: 0.8rem;
     }
 }
+/* Добавляем в конец файла style.css */
+
+/* Фикс выделения услуг при бронировании */
+.service-option.selected {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    transform: scale(1.05);
+}
+
+.service-option.selected .service-option-name,
+.service-option.selected .service-option-price {
+    color: white !important;
+}
+
+/* Улучшаем размеры для мобильных */
+@media (max-width: 768px) {
+    .service-option {
+        padding: 1.2rem;
+        font-size: 1rem;
+    }
+    
+    .calendar-day {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+    
+    .time-slot {
+        padding: 0.8rem;
+        font-size: 1rem;
+    }
+}
+/* Анимации и визуальная обратная связь */
+
+/* Плавные переходы для всех интерактивных элементов */
+.service-option,
+.calendar-day,
+.time-slot,
+.btn {
+    transition: all 0.3s ease;
+}
+
+/* Эффект пульсации при выборе */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.service-option.selected,
+.calendar-day.selected,
+.time-slot.selected {
+    animation: pulse 0.3s ease;
+}
+
+/* Индикатор загрузки */
+.loading-indicator {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-left: 10px;
+}
+
+/* Подсказки при наведении */
+.calendar-day.available:hover::after {
+    content: "Выбрать";
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--secondary);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+}
+
+/* Индикация количества слотов */
+.calendar-day.available::before {
+    content: attr(data-slots);
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: var(--primary);
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+.calendar-day.few-slots::before {
+    background: #f59e0b;
+}
+
+/* Успешное действие */
+@keyframes success-bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.success-animation {
+    animation: success-bounce 0.5s ease;
+}
+/* Анимации и визуальная обратная связь */
+
+/* Плавные переходы для всех интерактивных элементов */
+.service-option,
+.calendar-day,
+.time-slot,
+.btn {
+    transition: all 0.3s ease;
+}
+
+/* Эффект пульсации при выборе */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.service-option.selected,
+.calendar-day.selected,
+.time-slot.selected {
+    animation: pulse 0.3s ease;
+}
+
+/* Индикатор загрузки */
+.loading-indicator {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-left: 10px;
+}
+
+/* Подсказки при наведении */
+.calendar-day.available:hover::after {
+    content: "Выбрать";
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--secondary);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+}
+
+/* Индикация количества слотов */
+.calendar-day.available::before {
+    content: attr(data-slots);
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: var(--primary);
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+.calendar-day.few-slots::before {
+    background: #f59e0b;
+}
+
+/* Успешное действие */
+@keyframes success-bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.success-animation {
+    animation: success-bounce 0.5s ease;
+}
+
+/* Улучшенные мобильные стили для бронирования */
+@media (max-width: 768px) {
+    .calendar-day {
+        font-size: 14px !important;
+        min-height: 44px !important;
+        padding: 0.5rem !important;
+    }
+    
+    .time-slot {
+        min-height: 44px !important;
+        font-size: 16px !important;
+        padding: 1rem !important;
+    }
+    
+    .phone-input {
+        flex-direction: row !important;
+        gap: 8px !important;
+    }
+    
+    .phone-prefix {
+        min-width: 60px !important;
+    }
+    
+    .service-option {
+        padding: 1.2rem !important;
+        font-size: 16px !important;
+    }
+    
+    .booking-widget {
+        padding: 1.5rem !important;
+    }
+    
+    .time-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.5rem !important;
+    }
+}
+
+/* Header Banner Styles */
+.header-banner {
+    width: 100%;
+    height: 40px;
+    overflow: hidden;
+    background: var(--bg-dark);
+    border-bottom: 1px solid var(--border);
+}
+
+.header-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.8;
+}
+
+/* Обновляем header при наличии баннера */
+.header.with-banner {
+    padding-top: 0;
+}
+
+.header.with-banner .nav-container {
+    padding: 1rem 2rem;
+}
+
+/* Убираем текстовый логотип при наличии баннера */
+.header.with-banner .logo-text {
+    display: none;
+}
+
+/* Добавляем возможность кликабельного логотипа в nav */
+.logo-image {
+    height: 35px;
+    width: auto;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .header-banner {
+        height: 30px;
+    }
+    
+    .logo-image {
+        height: 30px;
+    }
+}
+
+/* Фиксы для мобильной версии бронирования */
+@media (max-width: 768px) {
+    /* Увеличиваем размер кликабельных элементов */
+    .calendar-day.available {
+        min-width: 44px;
+        min-height: 44px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .time-slot {
+        min-height: 48px;
+        font-size: 16px;
+        line-height: 1.2;
+    }
+    
+    /* Фиксим выравнивание телефонного ввода */
+    .phone-input {
+        flex-wrap: nowrap;
+        align-items: stretch;
+    }
+    
+    .phone-input input {
+        font-size: 16px; /* Предотвращаем зум на iOS */
+    }
+    
+    /* Улучшаем отображение сетки времени */
+    .time-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+    
+    /* Увеличиваем отступы для удобства */
+    .booking-widget {
+        padding: 1.5rem;
+    }
+    
+    .service-option {
+        min-height: 60px;
+        padding: 1rem;
+        font-size: 16px;
+    }
+}
+
+/* Предотвращаем зум на iOS при фокусе */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    select,
+    textarea,
+    input[type="text"],
+    input[type="tel"] {
+        font-size: 16px !important;
+    }
+}
+
+/* Фиксы для мобильной версии бронирования */
+@media (max-width: 768px) {
+    /* Увеличиваем размер кликабельных элементов */
+    .calendar-day.available {
+        min-width: 44px;
+        min-height: 44px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .time-slot {
+        min-height: 48px;
+        font-size: 16px;
+        line-height: 1.2;
+    }
+    
+    /* Фиксим выравнивание телефонного ввода */
+    .phone-input {
+        flex-wrap: nowrap;
+        align-items: stretch;
+    }
+    
+    .phone-input input {
+        font-size: 16px; /* Предотвращаем зум на iOS */
+    }
+    
+    /* Улучшаем отображение сетки времени */
+    .time-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+    
+    /* Увеличиваем отступы для удобства */
+    .booking-widget {
+        padding: 1.5rem;
+    }
+    
+    .service-option {
+        min-height: 60px;
+        padding: 1rem;
+        font-size: 16px;
+    }
+}
+
+/* Предотвращаем зум на iOS при фокусе */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    select,
+    textarea,
+    input[type="text"],
+    input[type="tel"] {
+        font-size: 16px !important;
+    }
+}
+
+/* ===== МИКРОАНИМАЦИИ ===== */
+
+/* Анимация появления шагов бронирования */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.booking-step {
+    animation: slideInUp 0.3s ease-out;
+}
+
+/* Анимация для карточек услуг */
+.service-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.service-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(255, 107, 53, 0.3);
+}
+
+/* Анимация для временных слотов */
+.time-slot {
+    transition: all 0.2s ease;
+}
+
+.time-slot:not(.disabled):hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+/* Пульсация для кнопки записи */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 107, 53, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 53, 0);
+    }
+}
+
+.btn-primary:hover {
+    animation: pulse 1.5s infinite;
+}
+
+/* Плавное появление элементов при скролле */
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Анимация загрузки */
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.loading-skeleton {
+    background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.05) 0%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        rgba(255, 255, 255, 0.05) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}

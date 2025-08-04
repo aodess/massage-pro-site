@@ -6,7 +6,7 @@ class ImageManagerPro {
         const settings = JSON.parse(localStorage.getItem('imageSettings') || '{}');
         this.maxFileSize = settings.maxFileSize || 50 * 1024 * 1024; // 50MB по умолчанию
         this.allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
-        this.compressionQuality = settings.compressionQuality || 0.85;
+        this.compressionQuality = settings.compressionQuality || 0.7;
         this.autoCompress = settings.autoCompress !== false; // true по умолчанию
     }
 
@@ -75,7 +75,7 @@ class ImageManagerPro {
                     // Calculate new dimensions (max 1200px)
                     let width = img.width;
                     let height = img.height;
-                    const maxDimension = 1200;
+                    const maxDimension = 800;
                     
                     if (width > maxDimension || height > maxDimension) {
                         if (width > height) {
@@ -114,8 +114,19 @@ class ImageManagerPro {
         });
     }
 
-    saveImage(base64, category, filename) {
-        const images = JSON.parse(localStorage.getItem('massageImages') || '{}');
+        saveImage(base64, category, filename) {
+        // Проверяем размер хранилища перед сохранением
+        try {
+            const currentSize = new Blob(Object.values(localStorage)).size / 1024 / 1024;
+            if (currentSize > 8) {
+                console.warn('Storage is getting full, cleaning up...');
+                this.cleanupOldImages(category, 3);
+            }
+        } catch (e) {
+            console.error('Storage check failed:', e);
+        }
+        
+        const images = JSON.parse(localStorage.getItem('massageImages') || '{}'); = JSON.parse(localStorage.getItem('massageImages') || '{}');
         
         if (!images[category]) {
             images[category] = [];
@@ -144,9 +155,41 @@ class ImageManagerPro {
             localStorage.setItem('massageImages', JSON.stringify(images));
             return true;
         }
+    // Автоматическая очистка старых изображений
+    cleanupOldImages(category, keepLast = 5) {
+        const images = this.getImages(category);
+        if (images.length > keepLast) {
+            images.splice(0, images.length - keepLast);
+            const allImages = JSON.parse(localStorage.getItem('massageImages') || '{}');
+            allImages[category] = images;
+            localStorage.setItem('massageImages', JSON.stringify(allImages));
+        }
+    }
         
         return false;
     }
+    cleanupOldImages(category, keepLast = 5) {
+        const images = JSON.parse(localStorage.getItem('massageImages') || '{}');
+        if (images[category] && images[category].length > keepLast) {
+            const removed = images[category].length - keepLast;
+            images[category] = images[category].slice(-keepLast);
+            localStorage.setItem('massageImages', JSON.stringify(images));
+            console.log(`Removed ${removed} old images from ${category}`);
+        }
+    }
+
+    // Экстренная очистка при переполнении
+    emergencyCleanup() {
+        const images = JSON.parse(localStorage.getItem('massageImages') || '{}');
+        Object.keys(images).forEach(category => {
+            if (images[category].length > 2) {
+                images[category] = images[category].slice(-2);
+            }
+        });
+        localStorage.setItem('massageImages', JSON.stringify(images));
+        console.warn('Emergency cleanup performed');
+    }
+
 
     createGalleryHTML(images, category) {
         if (!images || images.length === 0) {
@@ -216,7 +259,29 @@ window.loadGalleryImages = function() {
     const container = document.getElementById('galleryImages');
     if (container) {
         const images = window.imageManager.getImages('gallery');
-        container.innerHTML = window.imageManager.createGalleryHTML(images, 'gallery');
+        container.innerHTML = window.imageManager.
+    cleanupOldImages(category, keepLast = 5) {
+        const images = JSON.parse(localStorage.getItem('massageImages') || '{}');
+        if (images[category] && images[category].length > keepLast) {
+            const removed = images[category].length - keepLast;
+            images[category] = images[category].slice(-keepLast);
+            localStorage.setItem('massageImages', JSON.stringify(images));
+            console.log(`Removed ${removed} old images from ${category}`);
+        }
+    }
+
+    // Экстренная очистка при переполнении
+    emergencyCleanup() {
+        const images = JSON.parse(localStorage.getItem('massageImages') || '{}');
+        Object.keys(images).forEach(category => {
+            if (images[category].length > 2) {
+                images[category] = images[category].slice(-2);
+            }
+        });
+        localStorage.setItem('massageImages', JSON.stringify(images));
+        console.warn('Emergency cleanup performed');
+    }
+createGalleryHTML(images, 'gallery');
     }
 };
 
@@ -228,3 +293,6 @@ window.showSuccessMessage = function(message) {
         setTimeout(() => successMsg.classList.remove('show'), 3000);
     }
 };
+
+
+

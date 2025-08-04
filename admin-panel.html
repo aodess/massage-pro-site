@@ -642,7 +642,15 @@
                     <h3>Кабинет / Интерьер</h3>
                     <div id="interior-uploader"></div>
                 </div>
-            </div>
+                            <div class="card">
+                    <h3>Баннер шапки сайта</h3>
+                    <div id="header-banner-uploader"></div>
+                </div>
+                <div class="card">
+                    <h3>Баннер шапки сайта</h3>
+                    <div id="header-banner-uploader"></div>
+                </div>
+</div>
 
             <!-- Settings Tab -->
             <div id="settings" class="tab-content">
@@ -780,9 +788,31 @@
                 setTimeout(() => {
                     initializeSiteImages();
                     window.siteImagesInitialized = true;
+            // Баннер шапки
+            universalUploader.createUploader('header-banner-uploader', {
+                title: 'Загрузите узкое изображение для баннера в шапке (рекомендуется 1920x40px)',
+                category: 'headerBanner',
+                multiple: false,
+                showGallery: true,
+                onUpload: (result) => {
+                    showSuccessMessage('Баннер шапки загружен!');
+                }
+            });
+            // Баннер шапки
+            universalUploader.createUploader('header-banner-uploader', {
+                title: 'Загрузите узкое изображение для баннера в шапке (рекомендуется 1920x40px)',
+                category: 'headerBanner',
+                multiple: false,
+                showGallery: true,
+                onUpload: (result) => {
+                    showSuccessMessage('Баннер шапки загружен!');
+                }
+            });
                 }, 100);
             }
         };
     </script>
 </body>
 </html>
+
+

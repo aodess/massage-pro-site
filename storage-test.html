@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head><title>Storage Test</title></head>
+<body>
+<h2>LocalStorage Management</h2>
+<button onclick="localStorage.clear(); alert('Cleared!')">Clear All Storage</button>
+<button onclick="console.log('Size:', new Blob(Object.values(localStorage)).size / 1024 / 1024 + ' MB')">Check Size</button>
+<button onclick="console.log(JSON.parse(localStorage.getItem('massageImages') || '{}'))">Show Images</button>
+</body>
+</html>

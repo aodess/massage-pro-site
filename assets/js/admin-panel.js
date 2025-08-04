@@ -345,11 +345,35 @@ function saveSettings() {
 // Export/Import data
 function exportData() {
     const data = {
-        version: '1.0',
+        version: '2.0',
         exportDate: new Date().toISOString(),
+        site: window.location.hostname,
         bookings: JSON.parse(localStorage.getItem('massageBookings') || '[]'),
         services: JSON.parse(localStorage.getItem('massageServices') || '{}'),
         content: JSON.parse(localStorage.getItem('massageContent') || '{}'),
+        settings: JSON.parse(localStorage.getItem('massageSettings') || '{}'),
+        images: JSON.parse(localStorage.getItem('massageImages') || '{}'),
+        theme: JSON.parse(localStorage.getItem('massageTheme') || '{}')
+    };
+    
+    // Подсчитываем статистику
+    data.stats = {
+        totalBookings: data.bookings.length,
+        totalServices: Object.keys(data.services).length,
+        totalImages: Object.values(data.images).reduce((sum, cat) => sum + cat.length, 0),
+        exportSize: JSON.stringify(data).length
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `massage-pro-backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    showSuccessMessage(`Экспортировано: ${data.stats.totalBookings} записей, ${data.stats.totalImages} изображений`);
+}'),
         settings: JSON.parse(localStorage.getItem('massageSettings') || '{}'),
         images: JSON.parse(localStorage.getItem('massageImages') || '{}')
     };
@@ -398,4 +422,19 @@ function showSuccessMessage(message, elementId = 'contentSuccess') {
         successMsg.classList.add('show');
         setTimeout(() => successMsg.classList.remove('show'), 3000);
     }
-}
+}// Добавляем в конец файла admin-panel.js
+
+// Инициализация загрузчиков при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    // Ждем загрузки всех скриптов
+    setTimeout(() => {
+        if (typeof initializeSiteImages === 'function') {
+            // Инициализируем при открытии админки
+            if (sessionStorage.getItem('adminAuth') === 'true') {
+                initializeSiteImages();
+                window.siteImagesInitialized = true;
+            }
+        }
+    }, 500);
+});
+

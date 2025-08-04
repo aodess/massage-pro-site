@@ -30,13 +30,16 @@ class SiteImagesLoader {
         if (primaryImage) {
             const heroSection = document.querySelector('.hero');
             if (heroSection) {
+                // ИСПРАВЛЕНО: Используем правильное поле данных
+                const imageData = primaryImage.data || primaryImage.optimized;
+                
                 // Создаем стиль с фоновым изображением
                 const style = document.createElement('style');
                 style.textContent = `
                     .hero {
                         position: relative;
                         background-image: linear-gradient(rgba(10, 10, 10, 0.7), rgba(26, 26, 26, 0.8)), 
-                                          url('${primaryImage.data}');
+                                          url('${imageData}');
                         background-size: cover;
                         background-position: center;
                         background-attachment: fixed;
@@ -62,8 +65,11 @@ class SiteImagesLoader {
             // Находим все элементы с логотипом
             const logoElements = document.querySelectorAll('.logo-text');
             logoElements.forEach(element => {
+                // ИСПРАВЛЕНО: Используем правильное поле данных
+                const imageData = primaryLogo.data || primaryLogo.optimized;
+                
                 // Заменяем текст на изображение
-                element.innerHTML = `<img src="${primaryLogo.data}" alt="Logo" style="height: 40px; width: auto;">`;
+                element.innerHTML = `<img src="${imageData}" alt="Logo" style="height: 40px; width: auto;">`;
             });
         }
     }
@@ -81,13 +87,16 @@ class SiteImagesLoader {
         };
 
         sectionImages.forEach(img => {
+            // ИСПРАВЛЕНО: Используем правильное поле данных
+            const imageData = img.data || img.optimized;
+            
             // Ищем в имени файла название секции
             const filename = img.filename.toLowerCase();
             Object.keys(sectionMapping).forEach(sectionName => {
                 if (filename.includes(sectionName)) {
                     const section = document.querySelector(sectionMapping[sectionName]);
                     if (section) {
-                        section.style.backgroundImage = `linear-gradient(rgba(26, 26, 26, 0.95), rgba(26, 26, 26, 0.95)), url('${img.data}')`;
+                        section.style.backgroundImage = `linear-gradient(rgba(26, 26, 26, 0.95), rgba(26, 26, 26, 0.95)), url('${imageData}')`;
                         section.style.backgroundSize = 'cover';
                         section.style.backgroundPosition = 'center';
                         section.style.backgroundAttachment = 'fixed';
@@ -112,14 +121,18 @@ class SiteImagesLoader {
                 certificatesBlock.innerHTML = `
                     <h3 style="text-align: center; margin: 3rem 0 2rem; grid-column: 1/-1;">Сертификаты и дипломы</h3>
                     <div class="certificates-grid">
-                        ${certificates.map(cert => `
-                            <div class="certificate-item" onclick="siteImagesLoader.showCertificate('${cert.id}')">
-                                <img src="${cert.data}" alt="${cert.filename}">
-                                <div class="certificate-overlay">
-                                    <i class="fas fa-search-plus"></i>
+                        ${certificates.map(cert => {
+                            // ИСПРАВЛЕНО: Используем правильное поле данных
+                            const imageData = cert.data || cert.optimized;
+                            return `
+                                <div class="certificate-item" onclick="siteImagesLoader.showCertificate('${cert.id}')">
+                                    <img src="${imageData}" alt="${cert.filename}">
+                                    <div class="certificate-overlay">
+                                        <i class="fas fa-search-plus"></i>
+                                    </div>
                                 </div>
-                            </div>
-                        `).join('')}
+                            `;
+                        }).join('')}
                     </div>
                 `;
                 
@@ -148,15 +161,19 @@ class SiteImagesLoader {
                     <div class="container">
                         <h3 class="section-title" style="margin-bottom: 2rem;">Наш кабинет</h3>
                         <div class="interior-gallery">
-                            ${interiorImages.map((img, index) => `
-                                <div class="interior-item ${index === 0 ? 'large' : ''}" 
-                                     onclick="siteImagesLoader.showInteriorImage('${img.id}')">
-                                    <img src="${img.data}" alt="${img.filename}">
-                                    <div class="interior-overlay">
-                                        <i class="fas fa-expand"></i>
+                            ${interiorImages.map((img, index) => {
+                                // ИСПРАВЛЕНО: Используем правильное поле данных
+                                const imageData = img.data || img.optimized;
+                                return `
+                                    <div class="interior-item ${index === 0 ? 'large' : ''}" 
+                                         onclick="siteImagesLoader.showInteriorImage('${img.id}')">
+                                        <img src="${imageData}" alt="${img.filename}">
+                                        <div class="interior-overlay">
+                                            <i class="fas fa-expand"></i>
+                                        </div>
                                     </div>
-                                </div>
-                            `).join('')}
+                                `;
+                            }).join('')}
                         </div>
                     </div>
                 `;
@@ -180,7 +197,10 @@ class SiteImagesLoader {
             const placeholder = document.getElementById('profilePlaceholder');
             
             if (profileImg && placeholder) {
-                profileImg.src = primaryImage.data;
+                // ИСПРАВЛЕНО: Используем правильное поле данных
+                const imageData = primaryImage.data || primaryImage.optimized;
+                
+                profileImg.src = imageData;
                 profileImg.style.display = 'block';
                 placeholder.style.display = 'none';
             }
@@ -193,7 +213,9 @@ class SiteImagesLoader {
         const certificate = certificates.find(img => img.id === imageId);
         
         if (certificate) {
-            this.showImageModal(certificate.data, certificate.filename);
+            // ИСПРАВЛЕНО: Используем правильное поле данных
+            const imageData = certificate.data || certificate.optimized;
+            this.showImageModal(imageData, certificate.filename);
         }
     }
 
@@ -203,7 +225,9 @@ class SiteImagesLoader {
         const image = interiorImages.find(img => img.id === imageId);
         
         if (image) {
-            this.showImageModal(image.data, image.filename);
+            // ИСПРАВЛЕНО: Используем правильное поле данных
+            const imageData = image.data || image.optimized;
+            this.showImageModal(imageData, image.filename);
         }
     }
 

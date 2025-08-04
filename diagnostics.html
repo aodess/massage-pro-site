@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Диагностика MASSAGE PRO</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f0f0f0; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .ok { background: #d4edda; color: #155724; }
+        .warning { background: #fff3cd; color: #856404; }
+        .error { background: #f8d7da; color: #721c24; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: white; padding: 10px; overflow: auto; }
+    </style>
+</head>
+<body>
+    <h1>Диагностика системы MASSAGE PRO</h1>
+    
+    <div id="results"></div>
+    
+    <h2>Действия:</h2>
+    <button onclick="checkAll()">Полная проверка</button>
+    <button onclick="cleanupStorage()">Очистить старые данные</button>
+    <button onclick="optimizeImages()">Оптимизировать изображения</button>
+    <button onclick="exportDiagnostics()">Экспорт диагностики</button>
+    
+    <script>
+        function checkAll() {
+            const results = document.getElementById('results');
+            results.innerHTML = '';
+            
+            // Проверка localStorage
+            const storageSize = new Blob(Object.values(localStorage)).size / 1024 / 1024;
+            addResult(`Размер хранилища: ${storageSize.toFixed(2)} MB`, storageSize < 5 ? 'ok' : storageSize < 8 ? 'warning' : 'error');
+            
+            // Проверка изображений
+            const images = JSON.parse(localStorage.getItem('massageImages') || '{}');
+            let totalImages = 0;
+            let brokenImages = 0;
+            
+            Object.keys(images).forEach(category => {
+                totalImages += images[category].length;
+                images[category].forEach(img => {
+                    if (!img.data && !img.optimized) {
+                        brokenImages++;
+                    }
+                });
+            });
+            
+            addResult(`Всего изображений: ${totalImages}, поврежденных: ${brokenImages}`, brokenImages === 0 ? 'ok' : 'error');
+            
+            // Проверка записей
+            const bookings = JSON.parse(localStorage.getItem('massageBookings') || '[]');
+            addResult(`Записей в системе: ${bookings.length}`, 'ok');
+            
+            // Проверка сервисов
+            const services = JSON.parse(localStorage.getItem('massageServices') || '{}');
+            addResult(`Услуг в системе: ${Object.keys(services).length}`, Object.keys(services).length > 0 ? 'ok' : 'warning');
+            
+            // Детальная информация
+            const details = {
+                categories: Object.keys(images),
+                imagesByCategory: {}
+            };
+            
+            Object.keys(images).forEach(cat => {
+                details.imagesByCategory[cat] = images[cat].length;
+            });
+            
+            results.innerHTML += '<h3>Детали:</h3><pre>' + JSON.stringify(details, null, 2) + '</pre>';
+        }
+        
+        function addResult(text, status) {
+            const results = document.getElementById('results');
+            results.innerHTML += `<div class="status ${status}">${text}</div>`;
+        }
+        
+        function cleanupStorage() {
+            // Удаляем старые записи (старше 3 месяцев)
+            const bookings = JSON.parse(localStorage.getItem('massageBookings') || '[]');
+            const threeMonthsAgo = new Date();
+            threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+            
+            const filteredBookings = bookings.filter(b => new Date(b.date) > threeMonthsAgo);
+            localStorage.setItem('massageBookings', JSON.stringify(filteredBookings));
+            
+            alert(`Удалено старых записей: ${bookings.length - filteredBookings.length}`);
+            checkAll();
+        }
+        
+        function optimizeImages() {
+            const images = JSON.parse(localStorage.getItem('massageImages') || '{}');
+            
+            Object.keys(images).forEach(category => {
+                if (images[category].length > 5) {
+                    // Оставляем только последние 5
+                    images[category] = images[category].slice(-5);
+                }
+            });
+            
+            localStorage.setItem('massageImages', JSON.stringify(images));
+            alert('Изображения оптимизированы!');
+            checkAll();
+        }
+        
+        function exportDiagnostics() {
+            const diagnostics = {
+                timestamp: new Date().toISOString(),
+                url: window.location.href,
+                userAgent: navigator.userAgent,
+                localStorage: {
+                    size: new Blob(Object.values(localStorage)).size,
+                    keys: Object.keys(localStorage),
+                    items: {}
+                }
+            };
+            
+            Object.keys(localStorage).forEach(key => {
+                try {
+                    const value = localStorage.getItem(key);
+                    diagnostics.localStorage.items[key] = {
+                        size: value.length,
+                        preview: value.substring(0, 100) + '...'
+                    };
+                } catch (e) {
+                    diagnostics.localStorage.items[key] = { error: e.message };
+                }
+            });
+            
+            const blob = new Blob([JSON.stringify(diagnostics, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'massage-pro-diagnostics.json';
+            a.click();
+        }
+        
+        // Автозапуск проверки
+        window.onload = checkAll;
+    </script>
+</body>
+</html>

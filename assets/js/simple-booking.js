@@ -1,3 +1,30 @@
+// Добавляем в начало simple-booking.js для автоматической миграции
+(function() {
+    // Проверяем и мигрируем старые данные
+    const images = JSON.parse(localStorage.getItem('massageImages') || '{}');
+    let needsMigration = false;
+    
+    // Проверяем каждую категорию изображений
+    Object.keys(images).forEach(category => {
+        images[category].forEach(img => {
+            // Если есть только data, дублируем в optimized
+            if (img.data && !img.optimized) {
+                img.optimized = img.data;
+                needsMigration = true;
+            }
+            // Если есть только optimized, дублируем в data
+            else if (img.optimized && !img.data) {
+                img.data = img.optimized;
+                needsMigration = true;
+            }
+        });
+    });
+    
+    if (needsMigration) {
+        localStorage.setItem('massageImages', JSON.stringify(images));
+        console.log('Images migrated to new format');
+    }
+})();
 // ===== SIMPLE BOOKING SYSTEM =====
 
 // Global variables
@@ -15,7 +42,10 @@ let services = {};
 document.addEventListener('DOMContentLoaded', () => {
     // Hide loading screen
     setTimeout(() => {
-        document.getElementById('loading-screen').classList.add('hidden');
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+            loadingScreen.classList.add('hidden');
+        }
     }, 500);
     
     initializeApp();
@@ -38,20 +68,26 @@ function loadContent() {
         
         // Update business info
         if (content.businessName) {
-            document.querySelector('.logo-text').textContent = content.businessName;
+            const logoTexts = document.querySelectorAll('.logo-text');
+            logoTexts.forEach(el => el.textContent = content.businessName);
         }
         if (content.businessPhone) {
-            document.getElementById('businessPhone').textContent = content.businessPhone;
-            document.getElementById('phoneLink').href = `tel:${content.businessPhone.replace(/\D/g, '')}`;
+            const phoneEl = document.getElementById('businessPhone');
+            if (phoneEl) phoneEl.textContent = content.businessPhone;
+            const phoneLink = document.getElementById('phoneLink');
+            if (phoneLink) phoneLink.href = `tel:${content.businessPhone.replace(/\D/g, '')}`;
         }
         if (content.businessAddress) {
-            document.getElementById('businessAddress').textContent = content.businessAddress;
+            const addressEl = document.getElementById('businessAddress');
+            if (addressEl) addressEl.textContent = content.businessAddress;
         }
         if (content.aboutText) {
-            document.getElementById('aboutText').textContent = content.aboutText;
+            const aboutEl = document.getElementById('aboutText');
+            if (aboutEl) aboutEl.textContent = content.aboutText;
         }
         if (content.whatsappPhone) {
-            document.getElementById('whatsappLink').href = `https://wa.me/${content.whatsappPhone}`;
+            const whatsappLink = document.getElementById('whatsappLink');
+            if (whatsappLink) whatsappLink.href = `https://wa.me/${content.whatsappPhone}`;
         }
     }
     
@@ -62,9 +98,11 @@ function loadContent() {
         if (images.profile && images.profile.length > 0) {
             const profileImg = document.getElementById('profileImage');
             const placeholder = document.getElementById('profilePlaceholder');
-            profileImg.src = images.profile[0].data;
-            profileImg.style.display = 'block';
-            placeholder.style.display = 'none';
+            if (profileImg && placeholder) {
+                profileImg.src = images.profile[0].data;
+                profileImg.style.display = 'block';
+                placeholder.style.display = 'none';
+            }
         }
     }
 }
@@ -81,29 +119,33 @@ function loadServices() {
     
     // Render services grid
     const servicesGrid = document.getElementById('servicesGrid');
-    servicesGrid.innerHTML = Object.keys(services).map(key => {
-        const service = services[key];
-        return `
-            <div class="service-card" onclick="quickSelectService('${key}')">
-                <i class="fas ${service.icon} service-icon"></i>
-                <h3 class="service-name">${service.name}</h3>
-                <div class="service-price">${service.price}</div>
-                <div class="service-duration">${service.duration} минут</div>
-            </div>
-        `;
-    }).join('');
+    if (servicesGrid) {
+        servicesGrid.innerHTML = Object.keys(services).map(key => {
+            const service = services[key];
+            return `
+                <div class="service-card" onclick="quickSelectService('${key}')">
+                    <i class="fas ${service.icon} service-icon"></i>
+                    <h3 class="service-name">${service.name}</h3>
+                    <div class="service-price">${service.price}</div>
+                    <div class="service-duration">${service.duration} минут</div>
+                </div>
+            `;
+        }).join('');
+    }
     
     // Render service selection in booking
     const serviceSelect = document.getElementById('serviceSelect');
-    serviceSelect.innerHTML = Object.keys(services).map(key => {
-        const service = services[key];
-        return `
-            <div class="service-option" onclick="selectService('${key}')" data-service="${key}">
-                <span class="service-option-name">${service.name}</span>
-                <span class="service-option-price">${service.price}</span>
-            </div>
-        `;
-    }).join('');
+    if (serviceSelect) {
+        serviceSelect.innerHTML = Object.keys(services).map(key => {
+            const service = services[key];
+            return `
+                <div class="service-option" onclick="selectService('${key}')" data-service="${key}">
+                    <span class="service-option-name">${service.name}</span>
+                    <span class="service-option-price">${service.price}</span>
+                </div>
+            `;
+        }).join('');
+    }
 }
 
 // Quick select service from services section
@@ -124,10 +166,16 @@ function selectService(key) {
     document.querySelectorAll('.service-option').forEach(option => {
         option.classList.remove('selected');
     });
-    document.querySelector(`[data-service="${key}"]`).classList.add('selected');
+    const selectedOption = document.querySelector(`[data-service="${key}"]`);
+    if (selectedOption) {
+        selectedOption.classList.add('selected');
+    }
     
     // Enable next button
-    document.getElementById('nextBtn').disabled = false;
+    const nextBtn = document.getElementById('nextBtn');
+    if (nextBtn) {
+        nextBtn.disabled = false;
+    }
 }
 
 // Navigation between steps
@@ -147,7 +195,10 @@ function showStep(step) {
     document.querySelectorAll('.booking-step').forEach(stepEl => {
         stepEl.classList.remove('active');
     });
-    document.querySelector(`[data-step="${step}"]`).classList.add('active');
+    const currentStepEl = document.querySelector(`[data-step="${step}"]`);
+    if (currentStepEl) {
+        currentStepEl.classList.add('active');
+    }
     
     // Update navigation
     const navActions = document.getElementById('navigationActions');
@@ -155,10 +206,13 @@ function showStep(step) {
         navActions.style.display = 'none';
     } else {
         navActions.style.display = 'flex';
-        document.getElementById('nextBtn').disabled = 
-            (step === 1 && !selectedService) ||
-            (step === 2 && !selectedDate) ||
-            (step === 3 && !selectedTime);
+        const nextBtn = document.getElementById('nextBtn');
+        if (nextBtn) {
+            nextBtn.disabled = 
+                (step === 1 && !selectedService) ||
+                (step === 2 && !selectedDate) ||
+                (step === 3 && !selectedTime);
+        }
     }
     
     // Initialize step-specific content
@@ -193,7 +247,10 @@ function renderCalendar() {
                        'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
     const dayNames = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
     
-    document.getElementById('currentMonth').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+    const monthEl = document.getElementById('currentMonth');
+    if (monthEl) {
+        monthEl.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+    }
     
     const firstDay = new Date(currentYear, currentMonth, 1);
     const lastDay = new Date(currentYear, currentMonth + 1, 0);
@@ -240,7 +297,10 @@ function renderCalendar() {
         html += `<div class="${classes}" ${onclick} data-date="${day}">${day}</div>`;
     }
     
-    document.getElementById('calendarGrid').innerHTML = html;
+    const calendarGrid = document.getElementById('calendarGrid');
+    if (calendarGrid) {
+        calendarGrid.innerHTML = html;
+    }
 }
 
 function changeMonth(direction) {
@@ -258,13 +318,18 @@ function changeMonth(direction) {
 function selectDate(day) {
     selectedDate = new Date(currentYear, currentMonth, day);
     renderCalendar();
-    document.getElementById('nextBtn').disabled = false;
+    const nextBtn = document.getElementById('nextBtn');
+    if (nextBtn) {
+        nextBtn.disabled = false;
+    }
 }
 
 // Time slots
 function showTimeSlots() {
     const timeSlots = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
     const timeGrid = document.getElementById('timeGrid');
+    
+    if (!timeGrid) return;
     
     // Get existing bookings for selected date
     const bookings = JSON.parse(localStorage.getItem('massageBookings') || '[]');
@@ -293,14 +358,22 @@ function selectTime(time) {
     document.querySelectorAll('.time-slot').forEach(slot => {
         slot.classList.remove('selected');
     });
-    document.querySelector(`[data-time="${time}"]`).classList.add('selected');
+    const selectedSlot = document.querySelector(`[data-time="${time}"]`);
+    if (selectedSlot) {
+        selectedSlot.classList.add('selected');
+    }
     
-    document.getElementById('nextBtn').disabled = false;
+    const nextBtn = document.getElementById('nextBtn');
+    if (nextBtn) {
+        nextBtn.disabled = false;
+    }
 }
 
 // Summary
 function showSummary() {
     const summary = document.getElementById('bookingSummary');
+    if (!summary || !selectedDate || !selectedService || !selectedTime) return;
+    
     const dateStr = selectedDate.toLocaleDateString('ru-RU', {
         weekday: 'long',
         year: 'numeric',
@@ -335,6 +408,7 @@ function showSummary() {
 // Phone input
 function initializePhoneInput() {
     const phoneInput = document.getElementById('clientPhone');
+    if (!phoneInput) return;
     
     phoneInput.addEventListener('input', (e) => {
         let value = e.target.value.replace(/\D/g, '');
@@ -409,14 +483,19 @@ function showSuccessModal(booking) {
     const modal = document.getElementById('successModal');
     const message = document.getElementById('successMessage');
     
-    const dateStr = new Date(booking.date).toLocaleDateString('ru-RU');
-    message.textContent = `Ваша запись на ${dateStr} в ${booking.time} успешно создана!`;
-    
-    modal.classList.add('show');
+    if (modal && message) {
+        const dateStr = new Date(booking.date).toLocaleDateString('ru-RU');
+        message.textContent = `Ваша запись на ${dateStr} в ${booking.time} успешно создана!`;
+        
+        modal.classList.add('show');
+    }
 }
 
 function closeModal() {
-    document.getElementById('successModal').classList.remove('show');
+    const modal = document.getElementById('successModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
 }
 
 function resetBooking() {
@@ -425,7 +504,9 @@ function resetBooking() {
     selectedTime = null;
     currentStep = 1;
     
-    document.getElementById('clientPhone').value = '';
+    const phoneInput = document.getElementById('clientPhone');
+    if (phoneInput) phoneInput.value = '';
+    
     document.querySelectorAll('.selected').forEach(el => {
         el.classList.remove('selected');
     });
@@ -437,10 +518,12 @@ function resetBooking() {
 function initializeHeader() {
     window.addEventListener('scroll', () => {
         const header = document.getElementById('header');
-        if (window.scrollY > 100) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
+        if (header) {
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
         }
     });
     
@@ -462,11 +545,236 @@ function initializeMobileMenu() {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const navMenu = document.getElementById('navMenu');
     
-    mobileMenuBtn.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
-    });
+    if (mobileMenuBtn && navMenu) {
+        mobileMenuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+    }
 }
 
 function closeMobileMenu() {
-    document.getElementById('navMenu').classList.remove('active');
+    const navMenu = document.getElementById('navMenu');
+    if (navMenu) {
+        navMenu.classList.remove('active');
+    }
 }
+
+// Make functions global
+window.quickSelectService = quickSelectService;
+window.selectService = selectService;
+window.showStep = showStep;
+window.nextStep = nextStep;
+window.previousStep = previousStep;
+window.changeMonth = changeMonth;
+window.selectDate = selectDate;
+window.selectTime = selectTime;
+window.confirmBooking = confirmBooking;
+window.closeModal = closeModal;
+
+// ===== UX IMPROVEMENTS =====
+
+// Автопереход на следующий шаг после выбора
+function autoProgressToNextStep() {
+    setTimeout(() => {
+        const nextBtn = document.getElementById('nextBtn');
+        if (nextBtn && !nextBtn.disabled) {
+            nextStep();
+        }
+    }, 600);
+}
+
+// Обновляем функции выбора для автопрогресса
+const originalSelectService = window.selectService;
+window.selectService = function(key) {
+    originalSelectService(key);
+    
+    // Добавляем анимацию успеха
+    const selectedOption = document.querySelector(`[data-service="${key}"]`);
+    if (selectedOption) {
+        selectedOption.classList.add('success-animation');
+    }
+    
+    // Автопереход
+    autoProgressToNextStep();
+};
+
+const originalSelectDate = window.selectDate;
+window.selectDate = function(day) {
+    originalSelectDate(day);
+    
+    // Добавляем анимацию
+    const selectedDay = document.querySelector(`.calendar-day.selected`);
+    if (selectedDay) {
+        selectedDay.classList.add('success-animation');
+    }
+    
+    // Автопереход
+    autoProgressToNextStep();
+};
+
+const originalSelectTime = window.selectTime;
+window.selectTime = function(time) {
+    originalSelectTime(time);
+    
+    // Добавляем анимацию
+    const selectedSlot = document.querySelector(`[data-time="${time}"]`);
+    if (selectedSlot) {
+        selectedSlot.classList.add('success-animation');
+    }
+    
+    // Автопереход
+    autoProgressToNextStep();
+};
+
+// Добавляем индикацию количества свободных слотов
+function updateCalendarWithSlots() {
+    const bookings = JSON.parse(localStorage.getItem('massageBookings') || '[]');
+    
+    document.querySelectorAll('.calendar-day.available').forEach(dayEl => {
+        const day = parseInt(dayEl.dataset.date);
+        const date = new Date(currentYear, currentMonth, day);
+        const dateStr = date.toISOString().split('T')[0];
+        
+        // Подсчитываем занятые слоты
+        const bookedSlots = bookings.filter(b => 
+            b.date === dateStr && 
+            b.status === 'confirmed'
+        ).length;
+        
+        const totalSlots = 11; // Всего слотов в день
+        const availableSlots = totalSlots - bookedSlots;
+        
+        // Добавляем атрибут для CSS
+        dayEl.setAttribute('data-slots', availableSlots);
+        
+        // Добавляем класс если мало слотов
+        if (availableSlots > 0 && availableSlots <= 3) {
+            dayEl.classList.add('few-slots');
+        }
+    });
+}
+
+// Обновляем renderCalendar чтобы вызывать updateCalendarWithSlots
+const originalRenderCalendar = window.renderCalendar;
+window.renderCalendar = function() {
+    originalRenderCalendar();
+    setTimeout(updateCalendarWithSlots, 100);
+};
+
+// Добавляем подсказки при наведении
+document.addEventListener('DOMContentLoaded', () => {
+    // Добавляем плавную прокрутку к активному шагу
+    const originalShowStep = window.showStep;
+    window.showStep = function(step) {
+        originalShowStep(step);
+        
+        // Прокручиваем к форме бронирования
+        setTimeout(() => {
+            const bookingSection = document.getElementById('booking');
+            if (bookingSection) {
+                bookingSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 300);
+    };
+});
+
+// Улучшаем отображение занятых слотов
+const originalShowTimeSlots = window.showTimeSlots;
+window.showTimeSlots = function() {
+    originalShowTimeSlots();
+    
+    // Добавляем подсказки для занятых слотов
+    document.querySelectorAll('.time-slot.disabled').forEach(slot => {
+        slot.title = 'Время занято';
+    });
+    
+    document.querySelectorAll('.time-slot:not(.disabled)').forEach(slot => {
+        slot.title = 'Нажмите для выбора';
+    });
+};
+
+// Добавляем индикатор загрузки при отправке
+const originalConfirmBooking = window.confirmBooking;
+window.confirmBooking = function() {
+    const confirmBtn = document.querySelector('.booking-actions .btn-success');
+    if (confirmBtn) {
+        const originalText = confirmBtn.innerHTML;
+        confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+        confirmBtn.disabled = true;
+        
+        setTimeout(() => {
+            originalConfirmBooking();
+            confirmBtn.innerHTML = originalText;
+            confirmBtn.disabled = false;
+        }, 1000);
+    } else {
+        originalConfirmBooking();
+    }
+};
+
+console.log('UX improvements loaded');
+
+// Автосохранение состояния бронирования
+class BookingAutosave {
+    constructor() {
+        this.storageKey = 'bookingDraft';
+        this.saveInterval = null;
+    }
+    
+    start() {
+        // Сохраняем каждые 5 секунд
+        this.saveInterval = setInterval(() => this.save(), 5000);
+        
+        // Восстанавливаем при загрузке
+        this.restore();
+    }
+    
+    save() {
+        const draft = {
+            service: window.selectedService,
+            date: window.selectedDate,
+            time: window.selectedTime,
+            step: window.currentStep,
+            timestamp: Date.now()
+        };
+        
+        localStorage.setItem(this.storageKey, JSON.stringify(draft));
+    }
+    
+    restore() {
+        const draft = localStorage.getItem(this.storageKey);
+        if (!draft) return;
+        
+        const data = JSON.parse(draft);
+        // Проверяем, что черновик не старше 1 часа
+        if (Date.now() - data.timestamp > 3600000) {
+            localStorage.removeItem(this.storageKey);
+            return;
+        }
+        
+        // Восстанавливаем состояние
+        if (data.service) {
+            window.selectedService = data.service;
+            selectService(data.service.key);
+        }
+        if (data.date) {
+            window.selectedDate = new Date(data.date);
+        }
+        if (data.time) {
+            window.selectedTime = data.time;
+        }
+    }
+    
+    clear() {
+        localStorage.removeItem(this.storageKey);
+        if (this.saveInterval) {
+            clearInterval(this.saveInterval);
+        }
+    }
+}
+
+// Инициализируем автосохранение
+const bookingAutosave = new BookingAutosave();
+bookingAutosave.start();
+
+

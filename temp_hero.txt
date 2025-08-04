@@ -1,0 +1,33 @@
+    // Применяем фон главной страницы
+    applyHeroBackground() {
+        const heroImages = this.images.hero || [];
+        const primaryImage = heroImages.find(img => img.primary) || heroImages[0];
+        
+        if (primaryImage) {
+            const heroSection = document.querySelector('.hero');
+            if (heroSection) {
+                // ИСПРАВЛЕНО: Используем правильное поле данных
+                const imageData = primaryImage.data || primaryImage.optimized;
+                
+                // Создаем стиль с фоновым изображением
+                const style = document.createElement('style');
+                style.textContent = `
+                    .hero {
+                        position: relative;
+                        background-image: linear-gradient(rgba(10, 10, 10, 0.7), rgba(26, 26, 26, 0.8)), 
+                                          url('${imageData}');
+                        background-size: cover;
+                        background-position: center;
+                        background-attachment: fixed;
+                    }
+                    
+                    @media (max-width: 768px) {
+                        .hero {
+                            background-attachment: scroll;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+    }

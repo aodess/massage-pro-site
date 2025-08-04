@@ -91,6 +91,24 @@ class BookingSystem {
         const mins = minutes % 60;
         return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
     }
+    getBusyTimeSlots(date) {
+        const bookings = this.getBookingsForDate(date);
+        const busySlots = [];
+        
+        bookings.forEach(booking => {
+            const startTime = this.timeToMinutes(booking.time);
+            const duration = booking.service?.duration || 60;
+            const endTime = startTime + duration;
+            
+            // Добавляем все слоты, которые пересекаются с бронированием
+            for (let time = startTime; time < endTime; time += 30) {
+                busySlots.push(this.minutesToTime(time));
+            }
+        });
+        
+        return [...new Set(busySlots)]; // Убираем дубликаты
+    }
+
 
     cancelBooking(bookingId) {
         const booking = this.bookings.find(b => b.id === bookingId);
