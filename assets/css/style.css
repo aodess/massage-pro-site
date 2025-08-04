@@ -382,7 +382,7 @@ section {
     font-size: 0.9rem;
 }
 
-/* Booking Section */
+/* Booking Section - SIMPLIFIED */
 .booking {
     background: var(--bg-dark);
 }
@@ -391,53 +391,49 @@ section {
     background: var(--bg-section);
     border-radius: var(--border-radius);
     padding: 2rem;
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
 }
 
 .booking-step {
     display: none;
+    animation: fadeIn 0.3s ease;
 }
 
 .booking-step.active {
     display: block;
-    animation: fadeIn 0.5s ease;
 }
 
-.step-header {
+.step-indicator {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-.step-number {
-    width: 40px;
-    height: 40px;
-    background: var(--gradient);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    font-weight: bold;
-    font-size: 1.2rem;
-}
-
-.step-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-}
-
-/* Service Quick Select */
-.service-buttons {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 1rem;
     margin-bottom: 2rem;
 }
 
-.service-btn {
-    padding: 1rem;
+.step-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.3s ease;
+}
+
+.step-dot.active {
+    background: var(--primary);
+    transform: scale(1.5);
+}
+
+/* Service Selection - Simplified */
+.service-select {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.service-option {
+    padding: 1.5rem;
     background: rgba(255, 255, 255, 0.05);
     border: 2px solid var(--border);
     border-radius: 10px;
@@ -446,39 +442,42 @@ section {
     text-align: center;
 }
 
-.service-btn:hover {
+.service-option:hover {
     border-color: var(--primary);
+    transform: translateY(-2px);
 }
 
-.service-btn.selected {
+.service-option.selected {
     background: var(--primary);
     border-color: var(--primary);
 }
 
-.service-btn-name {
+.service-option-name {
     display: block;
     font-weight: 600;
     margin-bottom: 0.5rem;
+    font-size: 1.1rem;
 }
 
-.service-btn-price {
+.service-option-price {
     color: var(--text-gray);
-    font-size: 0.9rem;
+    font-size: 1.2rem;
+    font-weight: 700;
 }
 
-/* Calendar */
-.calendar-widget {
-    margin-bottom: 2rem;
+.service-option.selected .service-option-price {
+    color: white;
 }
 
-.calendar-nav {
+/* Calendar - Simplified */
+.calendar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
-.calendar-nav button {
+.calendar-nav-btn {
     background: none;
     border: none;
     color: var(--primary);
@@ -487,8 +486,8 @@ section {
     padding: 0.5rem;
 }
 
-#currentMonth {
-    font-size: 1.2rem;
+.calendar-month {
+    font-size: 1.3rem;
     font-weight: 600;
 }
 
@@ -498,34 +497,39 @@ section {
     gap: 0.5rem;
 }
 
-.calendar-header,
+.calendar-day-header {
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-gray);
+    padding: 0.5rem;
+    font-size: 0.9rem;
+}
+
 .calendar-day {
     aspect-ratio: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.9rem;
-}
-
-.calendar-header {
-    font-weight: 600;
-    color: var(--text-gray);
-}
-
-.calendar-day {
-    background: rgba(255, 255, 255, 0.05);
+    font-size: 1rem;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
+    position: relative;
 }
 
-.calendar-day:hover:not(.disabled) {
+.calendar-day.available {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.calendar-day.available:hover {
     background: rgba(255, 107, 53, 0.2);
+    transform: scale(1.1);
 }
 
 .calendar-day.selected {
     background: var(--primary);
     color: white;
+    font-weight: 600;
 }
 
 .calendar-day.disabled {
@@ -537,25 +541,32 @@ section {
     border: 2px solid var(--primary);
 }
 
-/* Time Slots */
+/* Time Slots - Grid Layout */
+.time-slots {
+    margin-top: 2rem;
+}
+
 .time-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 0.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
 }
 
 .time-slot {
-    padding: 0.75rem;
+    padding: 1rem;
     background: rgba(255, 255, 255, 0.05);
     border: 2px solid var(--border);
     border-radius: 8px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 1.1rem;
 }
 
 .time-slot:hover:not(.disabled) {
     border-color: var(--primary);
+    transform: translateY(-2px);
 }
 
 .time-slot.selected {
@@ -566,27 +577,37 @@ section {
 .time-slot.disabled {
     opacity: 0.3;
     cursor: not-allowed;
+    text-decoration: line-through;
 }
 
-/* Form */
-.form-group {
-    margin-bottom: 1.5rem;
+/* Phone Input */
+.phone-input {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
 }
 
-.form-group input,
-.form-group textarea {
-    width: 100%;
+.phone-prefix {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.phone-input input {
+    flex: 1;
     padding: 1rem;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border);
     border-radius: 8px;
     color: var(--text-light);
-    font-size: 1rem;
-    transition: all 0.3s ease;
+    font-size: 1.1rem;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+.phone-input input:focus {
     outline: none;
     border-color: var(--primary);
 }
@@ -597,25 +618,33 @@ section {
     border: 1px solid var(--primary);
     border-radius: 10px;
     padding: 1.5rem;
-    margin-top: 2rem;
+    margin-bottom: 1.5rem;
 }
 
-.booking-summary h4 {
-    margin-bottom: 1rem;
-    color: var(--primary);
-}
-
-.summary-item {
+.summary-row {
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.5rem;
 }
 
-/* Booking Navigation */
-.booking-nav {
+.summary-label {
+    color: var(--text-gray);
+}
+
+.summary-value {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+/* Action Buttons */
+.booking-actions {
     display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.booking-actions .btn {
+    padding: 1rem 2rem;
 }
 
 /* About Section */
@@ -751,7 +780,7 @@ section {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.9);
     display: none;
     align-items: center;
     justify-content: center;
@@ -852,8 +881,12 @@ section {
         order: -1;
     }
     
-    .service-buttons {
+    .service-select {
         grid-template-columns: 1fr;
+    }
+    
+    .time-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
     
     .calendar-grid {

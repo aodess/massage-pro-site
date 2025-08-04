@@ -51,7 +51,7 @@
                 <span>ПРОФЕССИОНАЛЬНЫЙ</span>
                 <span class="accent">МАССАЖ</span>
             </h1>
-            <p class="hero-subtitle">Восстановление • Релаксация • Здоровье</p>
+            <p class="hero-subtitle">Восстановление  Релаксация  Здоровье</p>
             <div class="hero-buttons">
                 <a href="#booking" class="btn btn-primary">
                     <i class="fas fa-calendar-check"></i>
@@ -93,74 +93,83 @@
         <div class="container">
             <h2 class="section-title">Быстрая запись</h2>
             <div class="booking-widget">
-                <!-- Step 1: Service & Date -->
-                <div class="booking-step active" data-step="1">
-                    <div class="step-header">
-                        <span class="step-number">1</span>
-                        <span class="step-title">Выберите услугу и дату</span>
-                    </div>
-                    
-                    <div class="service-quick-select">
-                        <h3>Выберите услугу:</h3>
-                        <div class="service-buttons" id="serviceButtons">
-                            <!-- Кнопки услуг будут загружены динамически -->
-                        </div>
-                    </div>
+                <!-- Step indicators -->
+                <div class="step-indicator">
+                    <span class="step-dot active" data-step="1"></span>
+                    <span class="step-dot" data-step="2"></span>
+                    <span class="step-dot" data-step="3"></span>
+                    <span class="step-dot" data-step="4"></span>
+                </div>
 
-                    <div class="calendar-widget">
-                        <h3>Выберите дату:</h3>
-                        <div class="calendar-nav">
-                            <button onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
-                            <span id="currentMonth"></span>
-                            <button onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+                <!-- Step 1: Service Selection -->
+                <div class="booking-step active" data-step="1">
+                    <h3 style="text-align: center; margin-bottom: 1.5rem;">Выберите услугу</h3>
+                    <div class="service-select" id="serviceSelect">
+                        <!-- Будет заполнено динамически -->
+                    </div>
+                </div>
+
+                <!-- Step 2: Date Selection -->
+                <div class="booking-step" data-step="2">
+                    <h3 style="text-align: center; margin-bottom: 1.5rem;">Выберите дату</h3>
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button class="calendar-nav-btn" onclick="changeMonth(-1)">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <span class="calendar-month" id="currentMonth"></span>
+                            <button class="calendar-nav-btn" onclick="changeMonth(1)">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
                         </div>
                         <div class="calendar-grid" id="calendarGrid">
                             <!-- Календарь будет сгенерирован JS -->
                         </div>
                     </div>
+                </div>
 
-                    <div class="time-slots" id="timeSlots" style="display: none;">
-                        <h3>Выберите время:</h3>
+                <!-- Step 3: Time Selection -->
+                <div class="booking-step" data-step="3">
+                    <h3 style="text-align: center; margin-bottom: 1.5rem;">Выберите время</h3>
+                    <div class="time-slots">
                         <div class="time-grid" id="timeGrid">
                             <!-- Временные слоты будут загружены динамически -->
                         </div>
                     </div>
                 </div>
 
-                <!-- Step 2: Contact Info -->
-                <div class="booking-step" data-step="2">
-                    <div class="step-header">
-                        <span class="step-number">2</span>
-                        <span class="step-title">Контактная информация</span>
-                    </div>
+                <!-- Step 4: Contact Info -->
+                <div class="booking-step" data-step="4">
+                    <h3 style="text-align: center; margin-bottom: 1.5rem;">Ваши контакты</h3>
                     
-                    <form id="bookingForm">
-                        <div class="form-group">
-                            <input type="text" id="clientName" placeholder="Ваше имя *" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="tel" id="clientPhone" placeholder="Телефон *" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea id="clientNotes" placeholder="Дополнительная информация (необязательно)" rows="3"></textarea>
-                        </div>
-                    </form>
-
                     <div class="booking-summary" id="bookingSummary">
-                        <!-- Сводка записи -->
+                        <!-- Сводка будет заполнена динамически -->
+                    </div>
+
+                    <div class="phone-input">
+                        <span class="phone-prefix">+972</span>
+                        <input type="tel" 
+                               id="clientPhone" 
+                               placeholder="50-123-4567" 
+                               pattern="[0-9-]+"
+                               maxlength="12"
+                               required>
+                    </div>
+
+                    <div class="booking-actions">
+                        <button class="btn btn-secondary" onclick="previousStep()">
+                            <i class="fas fa-arrow-left"></i> Назад
+                        </button>
+                        <button class="btn btn-success" onclick="confirmBooking()">
+                            <i class="fas fa-check"></i> Подтвердить
+                        </button>
                     </div>
                 </div>
 
-                <!-- Navigation -->
-                <div class="booking-nav">
-                    <button class="btn btn-secondary" onclick="previousStep()" id="prevBtn" style="display: none;">
-                        <i class="fas fa-arrow-left"></i> Назад
-                    </button>
+                <!-- Single action button for steps 1-3 -->
+                <div class="booking-actions" id="navigationActions" style="margin-top: 2rem;">
                     <button class="btn btn-primary" onclick="nextStep()" id="nextBtn" disabled>
                         Далее <i class="fas fa-arrow-right"></i>
-                    </button>
-                    <button class="btn btn-success" onclick="confirmBooking()" id="confirmBtn" style="display: none;">
-                        <i class="fas fa-check"></i> Подтвердить запись
                     </button>
                 </div>
             </div>
@@ -194,7 +203,7 @@
                     </div>
                 </div>
                 <div class="about-image">
-                    <img src="assets/images/profile.jpg" alt="Массажист" id="profileImage" onerror="this.style.display='none'">
+                    <img src="" alt="Массажист" id="profileImage" onerror="this.style.display='none'">
                     <div class="image-placeholder" id="profilePlaceholder">
                         <i class="fas fa-user-md"></i>
                         <span>Фото массажиста</span>
@@ -255,10 +264,8 @@
     </div>
 
     <!-- Scripts -->
-    <script src="assets/js/script.js"></script>
+    <script src="assets/js/simple-booking.js"></script>
     <script src="assets/js/booking-system.js"></script>
-    <script src="assets/js/smart-calendar.js"></script>
-    <script src="assets/js/enhanced-booking-form.js"></script>
     <script src="assets/js/site-images-loader.js"></script>
 </body>
 </html>

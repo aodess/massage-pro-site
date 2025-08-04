@@ -485,7 +485,7 @@
                         <span class="stat-label">Записей сегодня</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-number" id="monthRevenue">₪0</span>
+                        <span class="stat-number" id="monthRevenue">0</span>
                         <span class="stat-label">Доход за месяц</span>
                     </div>
                     <div class="stat-card">
@@ -692,8 +692,13 @@
     <script src="assets/js/notifications.js"></script>
     <script src="assets/js/booking-system.js"></script>
     <script>
-        // Инициализация загрузчиков при загрузке вкладки
-        function initializeSiteImages() {
+        // Глобальная функция для инициализации загрузчиков
+        window.initializeSiteImages = function() {
+            if (!window.universalUploader) {
+                console.error('Universal uploader not loaded');
+                return;
+            }
+
             // Фон главной страницы
             universalUploader.createUploader('hero-uploader', {
                 title: 'Загрузите изображение для фона главной страницы',
@@ -702,6 +707,7 @@
                 showGallery: true,
                 onUpload: (result) => {
                     console.log('Hero image uploaded:', result);
+                    showSuccessMessage('Фон главной страницы загружен!');
                 }
             });
 
@@ -710,7 +716,10 @@
                 title: 'Загрузите логотип (рекомендуется PNG с прозрачным фоном)',
                 category: 'logo',
                 multiple: false,
-                showGallery: true
+                showGallery: true,
+                onUpload: (result) => {
+                    showSuccessMessage('Логотип загружен!');
+                }
             });
 
             // Фоны секций
@@ -718,7 +727,10 @@
                 title: 'Фоновые изображения для разных секций сайта',
                 category: 'sections',
                 multiple: true,
-                showGallery: true
+                showGallery: true,
+                onUpload: (result) => {
+                    showSuccessMessage('Фон секции загружен!');
+                }
             });
 
             // Сертификаты
@@ -726,7 +738,10 @@
                 title: 'Загрузите сертификаты и дипломы',
                 category: 'certificates',
                 multiple: true,
-                showGallery: true
+                showGallery: true,
+                onUpload: (result) => {
+                    showSuccessMessage('Сертификат загружен!');
+                }
             });
 
             // Интерьер
@@ -734,9 +749,40 @@
                 title: 'Фотографии кабинета и интерьера',
                 category: 'interior',
                 multiple: true,
-                showGallery: true
+                showGallery: true,
+                onUpload: (result) => {
+                    showSuccessMessage('Фото интерьера загружено!');
+                }
             });
-        }
+        };
+
+        // Обновляем функцию showTab в админке
+        const originalShowTab = window.showTab;
+        window.showTab = function(tabName) {
+            // Вызываем оригинальную функцию
+            if (originalShowTab) {
+                originalShowTab.apply(this, arguments);
+            } else {
+                // Если оригинальной функции нет, делаем базовый функционал
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabName).classList.add('active');
+            }
+            
+            // Инициализируем загрузчики при открытии вкладки
+            if (tabName === 'site-images' && !window.siteImagesInitialized) {
+                setTimeout(() => {
+                    initializeSiteImages();
+                    window.siteImagesInitialized = true;
+                }, 100);
+            }
+        };
     </script>
 </body>
 </html>
