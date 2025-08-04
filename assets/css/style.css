@@ -11,6 +11,21 @@
     --border: rgba(255, 255, 255, 0.1);
     --gradient: linear-gradient(135deg, #ff6b35, #c1272d);
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    --success: #10b981;
+    --danger: #ef4444;
+    
+    /* Font variables */
+    --font-primary: 'Roboto', sans-serif;
+    --font-heading: 'Bebas Neue', cursive;
+    --font-size-base: 16px;
+    --font-size-h1: 3rem;
+    --font-size-h2: 2.5rem;
+    --font-size-h3: 2rem;
+    
+    /* Layout variables */
+    --container-width: 1200px;
+    --section-padding: 5rem;
+    --border-radius: 15px;
 }
 
 * {
@@ -20,7 +35,8 @@
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: var(--font-primary);
+    font-size: var(--font-size-base);
     background: var(--bg-dark);
     color: var(--text-light);
     line-height: 1.6;
@@ -52,8 +68,8 @@ body {
 }
 
 .loading-logo {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 3rem;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h1);
     background: var(--gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -92,7 +108,7 @@ body {
 }
 
 .nav-container {
-    max-width: 1200px;
+    max-width: var(--container-width);
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
@@ -101,7 +117,7 @@ body {
 }
 
 .logo {
-    font-family: 'Bebas Neue', cursive;
+    font-family: var(--font-heading);
     font-size: 2rem;
     font-weight: 900;
     background: var(--gradient);
@@ -162,19 +178,19 @@ body {
 
 /* Container */
 .container {
-    max-width: 1200px;
+    max-width: var(--container-width);
     margin: 0 auto;
     padding: 0 2rem;
 }
 
 /* Sections */
 section {
-    padding: 5rem 0;
+    padding: var(--section-padding) 0;
 }
 
 .section-title {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 3rem;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
     text-align: center;
     margin-bottom: 3rem;
     position: relative;
@@ -207,7 +223,7 @@ section {
 }
 
 .hero-title {
-    font-family: 'Bebas Neue', cursive;
+    font-family: var(--font-heading);
     font-size: clamp(3rem, 8vw, 6rem);
     font-weight: 900;
     line-height: 1;
@@ -325,7 +341,7 @@ section {
 .service-card {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border);
-    border-radius: 15px;
+    border-radius: var(--border-radius);
     padding: 2rem;
     text-align: center;
     transition: all 0.3s ease;
@@ -373,7 +389,7 @@ section {
 
 .booking-widget {
     background: var(--bg-section);
-    border-radius: 20px;
+    border-radius: var(--border-radius);
     padding: 2rem;
     max-width: 800px;
     margin: 0 auto;
@@ -651,7 +667,7 @@ section {
 .about-image {
     position: relative;
     height: 400px;
-    border-radius: 15px;
+    border-radius: var(--border-radius);
     overflow: hidden;
 }
 
@@ -692,7 +708,7 @@ section {
     text-align: center;
     padding: 2rem;
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
+    border-radius: var(--border-radius);
     transition: all 0.3s ease;
 }
 

@@ -2,9 +2,12 @@
 
 class ImageManagerPro {
     constructor() {
-        this.maxFileSize = 5 * 1024 * 1024; // 5MB
-        this.allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-        this.compressionQuality = 0.8;
+        // Получаем настройки из localStorage или используем дефолтные
+        const settings = JSON.parse(localStorage.getItem('imageSettings') || '{}');
+        this.maxFileSize = settings.maxFileSize || 50 * 1024 * 1024; // 50MB по умолчанию
+        this.allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+        this.compressionQuality = settings.compressionQuality || 0.85;
+        this.autoCompress = settings.autoCompress !== false; // true по умолчанию
     }
 
     async uploadImage(file, category = 'general') {
@@ -39,12 +42,12 @@ class ImageManagerPro {
 
     validateFile(file) {
         if (!this.allowedTypes.includes(file.type)) {
-            alert('Разрешены только изображения форматов: JPG, PNG, WebP');
+            alert('Разрешены только изображения форматов: JPG, PNG, WebP, GIF');
             return false;
         }
         
         if (file.size > this.maxFileSize) {
-            alert('Размер файла не должен превышать 5MB');
+            alert(`Размер файла не должен превышать ${Math.round(this.maxFileSize / 1024 / 1024)}MB`);
             return false;
         }
         
@@ -52,6 +55,11 @@ class ImageManagerPro {
     }
 
     async compressImage(file) {
+        // Если автосжатие отключено или файл маленький, возвращаем как есть
+        if (!this.autoCompress || file.size < 1024 * 1024) { // меньше 1MB
+            return file;
+        }
+
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);

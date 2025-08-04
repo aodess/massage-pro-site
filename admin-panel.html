@@ -465,6 +465,9 @@
                 <button class="tab" onclick="showTab('gallery')">
                     <i class="fas fa-images"></i> Галерея
                 </button>
+                <button class="tab" onclick="showTab('site-images')">
+                    <i class="fas fa-photo-video"></i> Изображения сайта
+                </button>
                 <button class="tab" onclick="showTab('settings')">
                     <i class="fas fa-cog"></i> Настройки
                 </button>
@@ -613,6 +616,34 @@
                 </div>
             </div>
 
+            <!-- Site Images Tab -->
+            <div id="site-images" class="tab-content">
+                <div class="card">
+                    <h3>Фон главной страницы (Hero Section)</h3>
+                    <div id="hero-uploader"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Логотип сайта</h3>
+                    <div id="logo-uploader"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Фоны секций</h3>
+                    <div id="sections-uploader"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Сертификаты и дипломы</h3>
+                    <div id="certificates-uploader"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Кабинет / Интерьер</h3>
+                    <div id="interior-uploader"></div>
+                </div>
+            </div>
+
             <!-- Settings Tab -->
             <div id="settings" class="tab-content">
                 <div class="card">
@@ -657,7 +688,55 @@
 
     <script src="assets/js/admin-panel.js"></script>
     <script src="assets/js/image-manager-pro.js"></script>
+    <script src="assets/js/universal-image-uploader.js"></script>
     <script src="assets/js/notifications.js"></script>
     <script src="assets/js/booking-system.js"></script>
+    <script>
+        // Инициализация загрузчиков при загрузке вкладки
+        function initializeSiteImages() {
+            // Фон главной страницы
+            universalUploader.createUploader('hero-uploader', {
+                title: 'Загрузите изображение для фона главной страницы',
+                category: 'hero',
+                multiple: false,
+                showGallery: true,
+                onUpload: (result) => {
+                    console.log('Hero image uploaded:', result);
+                }
+            });
+
+            // Логотип
+            universalUploader.createUploader('logo-uploader', {
+                title: 'Загрузите логотип (рекомендуется PNG с прозрачным фоном)',
+                category: 'logo',
+                multiple: false,
+                showGallery: true
+            });
+
+            // Фоны секций
+            universalUploader.createUploader('sections-uploader', {
+                title: 'Фоновые изображения для разных секций сайта',
+                category: 'sections',
+                multiple: true,
+                showGallery: true
+            });
+
+            // Сертификаты
+            universalUploader.createUploader('certificates-uploader', {
+                title: 'Загрузите сертификаты и дипломы',
+                category: 'certificates',
+                multiple: true,
+                showGallery: true
+            });
+
+            // Интерьер
+            universalUploader.createUploader('interior-uploader', {
+                title: 'Фотографии кабинета и интерьера',
+                category: 'interior',
+                multiple: true,
+                showGallery: true
+            });
+        }
+    </script>
 </body>
 </html>

@@ -80,6 +80,17 @@ function showTab(tabName) {
         case 'gallery':
             loadGalleryImages();
             break;
+        case 'site-images':
+            // Инициализируем загрузчики только при первом открытии
+            if (!window.siteImagesInitialized) {
+                setTimeout(() => {
+                    if (typeof initializeSiteImages === 'function') {
+                        initializeSiteImages();
+                        window.siteImagesInitialized = true;
+                    }
+                }, 100);
+            }
+            break;
     }
 }
 
