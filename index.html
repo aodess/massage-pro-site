@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Массажная Мастерская | סדנת עיסוי | Massage Workshop</title>
+    
+    <!-- Крутые шрифты и библиотеки -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;700;900&family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    
+    <style>
+        :root {
+            --primary: #FFD700;
+            --secondary: #1a1a1a;
+            --accent: #FF6B6B;
+            --text: #ffffff;
+            --bg: #0a0a0a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 3D Background */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .geometric-bg {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.1;
+        }
+
+        .geometric-shape {
+            position: absolute;
+            border: 2px solid var(--primary);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 5%;
+            transform: rotate(45deg);
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 10%;
+            border-radius: 50%;
+            animation-delay: 5s;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            bottom: 10%;
+            left: 50%;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(30px) rotate(240deg); }
+        }
+
+        /* Language Switcher */
+        .lang-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .lang-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            cursor: pointer;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-btn:hover, .lang-btn.active {
+            background: var(--primary);
+            color: var(--bg);
+            transform: scale(1.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .hero-content {
+            transform-style: preserve-3d;
+            animation: heroFloat 6s infinite ease-in-out;
+        }
+
+        @keyframes heroFloat {
+            0%, 100% { transform: translateY(0) rotateX(0); }
+            50% { transform: translateY(-20px) rotateX(5deg); }
+        }
+
+        h1 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(4rem, 10vw, 8rem);
+            letter-spacing: 5px;
+            background: linear-gradient(45deg, var(--primary), var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .tagline {
+            font-family: 'Rubik', sans-serif;
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: var(--primary);
+            margin-bottom: 40px;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-block;
+            padding: 20px 50px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: var(--bg);
+            text-decoration: none;
+            font-weight: 900;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .cta-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Therapists Section */
+        .therapists {
+            padding: 100px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(3rem, 6vw, 5rem);
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--primary);
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .therapists-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .therapist-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transition: all 0.3s;
+        }
+
+        .therapist-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        .therapist-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .therapist-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 30px 60px rgba(255, 215, 0, 0.3);
+        }
+
+        .therapist-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+
+        .therapist-name {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .therapist-specialty {
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .therapist-price {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--accent);
+        }
+
+        /* Services */
+        .services {
+            padding: 100px 20px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .services-carousel {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .service-slide {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 107, 0.1));
+            border: 2px solid var(--primary);
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+            transform: scale(0.9);
+            transition: all 0.3s;
+        }
+
+        .service-slide.swiper-slide-active {
+            transform: scale(1);
+        }
+
+        .service-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        /* Gallery */
+        .gallery {
+            padding: 100px 20px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            height: 300px;
+            cursor: pointer;
+            transform: scale(1);
+            transition: all 0.3s;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .gallery-item img, .gallery-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Contact */
+        .contact {
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.2rem;
+        }
+
+        .contact-item i {
+            color: var(--primary);
+            font-size: 2rem;
+        }
+
+        /* Social Media Buttons */
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.8rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+
+        .social-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .social-btn:hover::before {
+            width: 100px;
+            height: 100px;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-5px) scale(1.1);
+            border-color: var(--primary);
+        }
+
+        .social-btn.instagram {
+            background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+            color: white;
+        }
+
+        .social-btn.whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .social-btn.tiktok {
+            background: #000;
+            color: white;
+            border: 2px solid #FF0050;
+        }
+
+        .social-btn.facebook {
+            background: #1877F2;
+            color: white;
+        }
+
+        .social-btn.telegram {
+            background: #0088cc;
+            color: white;
+        }
+
+        /* Booking Modal */
+        .booking-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .booking-modal.active {
+            display: flex;
+        }
+
+        .booking-content {
+            background: var(--secondary);
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+            background: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #333;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .lang-switcher {
+                top: 10px;
+                right: 10px;
+            }
+
+            .lang-btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+
+            h1 {
+                font-size: clamp(3rem, 15vw, 5rem);
+            }
+
+            .therapists-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .social-buttons {
+                gap: 15px;
+            }
+
+            .social-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Admin Link */
+        .admin-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg);
+            font-size: 1.5rem;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+            transition: all 0.3s;
+            z-index: 999;
+        }
+
+        .admin-link:hover {
+            transform: scale(1.2) rotate(180deg);
+            background: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Switcher -->
+    <div class="lang-switcher">
+        <button class="lang-btn active" onclick="changeLanguage('ru')">RU</button>
+        <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
+        <button class="lang-btn" onclick="changeLanguage('he')">עב</button>
+    </div>
+
+    <!-- Geometric Background -->
+    <div class="geometric-bg">
+        <div class="geometric-shape shape-1"></div>
+        <div class="geometric-shape shape-2"></div>
+        <div class="geometric-shape shape-3"></div>
+    </div>
+
+    <div id="particles-js"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 data-translate="title">МАССАЖНАЯ МАСТЕРСКАЯ</h1>
+            <p class="tagline" data-translate="tagline">Искусство исцеления в каждом прикосновении</p>
+            <a href="#booking" class="cta-button" onclick="openBooking()" data-translate="book">ЗАПИСАТЬСЯ СЕЙЧАС</a>
+        </div>
+    </section>
+
+    <!-- Therapists -->
+    <section class="therapists" id="therapists">
+        <h2 class="section-title" data-translate="therapists">НАШИ МАСТЕРА</h2>
+        <div class="therapists-grid" id="therapistsGrid">
+            <!-- Динамически загружается -->
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section class="services" id="services">
+        <h2 class="section-title" data-translate="services">УСЛУГИ</h2>
+        <div class="swiper services-carousel">
+            <div class="swiper-wrapper" id="servicesSlider">
+                <!-- Динамически загружается -->
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="gallery" id="gallery">
+        <h2 class="section-title" data-translate="gallery">ГАЛЕРЕЯ</h2>
+        <div class="gallery-grid" id="galleryGrid">
+            <!-- Динамически загружается -->
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact" id="contact">
+        <h2 class="section-title" data-translate="contact">КОНТАКТЫ</h2>
+        <div class="contact-info">
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span id="contactAddress">Тель-Авив, ул. Дизенгоф 123</span>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-phone"></i>
+                <span id="contactPhone">+972 50-123-4567</span>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-clock"></i>
+                <span id="contactHours">9:00 - 21:00</span>
+            </div>
+        </div>
+        
+        <!-- Social Media -->
+        <div class="social-buttons" id="socialButtons">
+            <!-- Динамически загружается -->
+        </div>
+        
+        <a href="#booking" class="cta-button" onclick="openBooking()" data-translate="book">ЗАПИСАТЬСЯ</a>
+    </section>
+
+    <!-- Booking Modal -->
+    <div class="booking-modal" id="bookingModal">
+        <div class="booking-content">
+            <button class="close-btn" onclick="closeBooking()">&times;</button>
+            <h2 data-translate="bookingTitle">Запись на массаж</h2>
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label data-translate="name">Ваше имя</label>
+                    <input type="text" id="clientName" required>
+                </div>
+                <div class="form-group">
+                    <label data-translate="phone">Телефон</label>
+                    <input type="tel" id="clientPhone" required>
+                </div>
+                <div class="form-group">
+                    <label data-translate="selectTherapist">Выберите мастера</label>
+                    <select id="therapistSelect">
+                        <!-- Динамически загружается -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label data-translate="selectService">Выберите услугу</label>
+                    <select id="serviceSelect">
+                        <!-- Динамически загружается -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label data-translate="date">Дата и время</label>
+                    <input type="datetime-local" id="bookingDate" required>
+                </div>
+                <div class="form-group">
+                    <label data-translate="notes">Примечания</label>
+                    <textarea id="bookingNotes" rows="3"></textarea>
+                </div>
+                <button type="submit" class="cta-button" style="width: 100%;" data-translate="submit">Отправить заявку</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Link -->
+    <a href="admin.html" class="admin-link" title="Admin Panel">
+        <i class="fas fa-cog"></i>
+    </a>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Particles config
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80 },
+                color: { value: '#FFD700' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5, random: false },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#FFD700',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'repulse' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                }
+            }
+        });
+
+        // Language translations
+        const translations = {
+            ru: {
+                title: 'МАССАЖНАЯ МАСТЕРСКАЯ',
+                tagline: 'Искусство исцеления в каждом прикосновении',
+                book: 'ЗАПИСАТЬСЯ СЕЙЧАС',
+                therapists: 'НАШИ МАСТЕРА',
+                services: 'УСЛУГИ',
+                gallery: 'ГАЛЕРЕЯ',
+                contact: 'КОНТАКТЫ',
+                address: 'Тель-Авив, ул. Дизенгоф 123',
+                hours: '9:00 - 21:00',
+                bookingTitle: 'Запись на массаж',
+                name: 'Ваше имя',
+                phone: 'Телефон',
+                selectTherapist: 'Выберите мастера',
+                selectService: 'Выберите услугу',
+                date: 'Дата и время',
+                notes: 'Примечания',
+                submit: 'Отправить заявку'
+            },
+            en: {
+                title: 'MASSAGE WORKSHOP',
+                tagline: 'The Art of Healing in Every Touch',
+                book: 'BOOK NOW',
+                therapists: 'OUR THERAPISTS',
+                services: 'SERVICES',
+                gallery: 'GALLERY',
+                contact: 'CONTACT',
+                address: 'Tel Aviv, Dizengoff St. 123',
+                hours: '9:00 AM - 9:00 PM',
+                bookingTitle: 'Book a Massage',
+                name: 'Your Name',
+                phone: 'Phone',
+                selectTherapist: 'Select Therapist',
+                selectService: 'Select Service',
+                date: 'Date and Time',
+                notes: 'Notes',
+                submit: 'Submit Request'
+            },
+            he: {
+                title: 'סדנת עיסוי',
+                tagline: 'אמנות הריפוי בכל מגע',
+                book: 'להזמין עכשיו',
+                therapists: 'המטפלים שלנו',
+                services: 'שירותים',
+                gallery: 'גלריה',
+                contact: 'צור קשר',
+                address: 'תל אביב, רחוב דיזנגוף 123',
+                hours: '9:00 - 21:00',
+                bookingTitle: 'הזמנת עיסוי',
+                name: 'שם',
+                phone: 'טלפון',
+                selectTherapist: 'בחר מטפל',
+                selectService: 'בחר שירות',
+                date: 'תאריך ושעה',
+                notes: 'הערות',
+                submit: 'שלח בקשה'
+            }
+        };
+
+        let currentLang = localStorage.getItem('language') || 'ru';
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('language', lang);
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.getAttribute('data-translate');
+                el.textContent = translations[lang][key];
+            });
+            
+            document.documentElement.lang = lang;
+            document.dir = lang === 'he' ? 'rtl' : 'ltr';
+            
+            // Reload data with new language
+            loadData();
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            const therapists = JSON.parse(localStorage.getItem('therapists') || '[]');
+            const services = JSON.parse(localStorage.getItem('services') || '[]');
+            const gallery = JSON.parse(localStorage.getItem('gallery') || '[]');
+            const social = JSON.parse(localStorage.getItem('social') || '{}');
+            const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+            
+            // Update contact info
+            if (settings.address) document.getElementById('contactAddress').textContent = settings.address;
+            if (settings.phone) document.getElementById('contactPhone').textContent = settings.phone;
+            if (settings.hours) document.getElementById('contactHours').textContent = settings.hours;
+            
+            // Default data if empty
+            if (therapists.length === 0) {
+                therapists.push(
+                    {
+                        name: { ru: 'Александр', en: 'Alexander', he: 'אלכסנדר' },
+                        specialty: { ru: 'Спортивный массаж', en: 'Sports Massage', he: 'עיסוי ספורט' },
+                        price: '350',
+                        image: 'https://source.unsplash.com/300x300/?man,massage'
+                    },
+                    {
+                        name: { ru: 'Мария', en: 'Maria', he: 'מריה' },
+                        specialty: { ru: 'Классический массаж', en: 'Classic Massage', he: 'עיסוי קלאסי' },
+                        price: '300',
+                        image: 'https://source.unsplash.com/300x300/?woman,spa'
+                    }
+                );
+                localStorage.setItem('therapists', JSON.stringify(therapists));
+            }
+            
+            if (services.length === 0) {
+                services.push(
+                    {
+                        name: { ru: 'Классический массаж', en: 'Classic Massage', he: 'עיסוי קלאסי' },
+                        description: { ru: 'Расслабляющий массаж всего тела', en: 'Relaxing full body massage', he: 'עיסוי מרגיע לכל הגוף' },
+                        price: '300',
+                        duration: '60 мин',
+                        icon: 'fa-spa'
+                    },
+                    {
+                        name: { ru: 'Спортивный массаж', en: 'Sports Massage', he: 'עיסוי ספורט' },
+                        description: { ru: 'Глубокая проработка мышц', en: 'Deep muscle therapy', he: 'טיפול עמוק בשרירים' },
+                        price: '400',
+                        duration: '90 мин',
+                        icon: 'fa-dumbbell'
+                    },
+                    {
+                        name: { ru: 'Тайский массаж', en: 'Thai Massage', he: 'עיסוי תאילנדי' },
+                        description: { ru: 'Традиционная восточная техника', en: 'Traditional oriental technique', he: 'טכניקה מזרחית מסורתית' },
+                        price: '450',
+                        duration: '120 мин',
+                        icon: 'fa-yin-yang'
+                    }
+                );
+                localStorage.setItem('services', JSON.stringify(services));
+            }
+            
+            if (gallery.length === 0) {
+                gallery.push(
+                    { type: 'image', url: 'https://source.unsplash.com/400x300/?massage,spa' },
+                    { type: 'image', url: 'https://source.unsplash.com/400x300/?wellness,therapy' },
+                    { type: 'image', url: 'https://source.unsplash.com/400x300/?relaxation,health' }
+                );
+                localStorage.setItem('gallery', JSON.stringify(gallery));
+            }
+            
+            // Render therapists
+            const therapistsGrid = document.getElementById('therapistsGrid');
+            therapistsGrid.innerHTML = therapists.map(t => `
+                <div class="therapist-card">
+                    <img src="${t.image}" alt="${t.name[currentLang] || t.name.ru || t.name}" class="therapist-img">
+                    <h3 class="therapist-name">${t.name[currentLang] || t.name.ru || t.name}</h3>
+                    <p class="therapist-specialty">${t.specialty[currentLang] || t.specialty.ru || t.specialty}</p>
+                    <p class="therapist-price">₪${t.price}</p>
+                    <a href="#booking" class="cta-button" onclick="openBooking('${t.name[currentLang] || t.name.ru || t.name}')">${translations[currentLang].book}</a>
+                </div>
+            `).join('');
+            
+            // Render services
+            const servicesSlider = document.getElementById('servicesSlider');
+            servicesSlider.innerHTML = services.map(s => `
+                <div class="swiper-slide service-slide">
+                    <i class="fas ${s.icon} service-icon"></i>
+                    <h3>${s.name[currentLang] || s.name.ru || s.name}</h3>
+                    <p>${s.description[currentLang] || s.description.ru || s.description}</p>
+                    <p style="font-size: 2rem; font-weight: bold; color: var(--accent);">₪${s.price}</p>
+                    <p style="color: #999;">${s.duration}</p>
+                </div>
+            `).join('');
+            
+            // Initialize Swiper
+            new Swiper('.services-carousel', {
+                slidesPerView: 1,
+                spaceBetween: 30,
+                loop: true,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true
+                },
+                breakpoints: {
+                    640: { slidesPerView: 2 },
+                    1024: { slidesPerView: 3 }
+                }
+            });
+            
+            // Render gallery
+            const galleryGrid = document.getElementById('galleryGrid');
+            galleryGrid.innerHTML = gallery.map(g => `
+                <div class="gallery-item">
+                    ${g.type === 'image' 
+                        ? `<img src="${g.url}" alt="Gallery">` 
+                        : `<video src="${g.url}" controls></video>`
+                    }
+                </div>
+            `).join('');
+            
+            // Render social buttons
+            const socialButtons = document.getElementById('socialButtons');
+            let socialHTML = '';
+            
+            if (social.instagram) {
+                socialHTML += `<a href="${social.instagram}" target="_blank" class="social-btn instagram"><i class="fab fa-instagram"></i></a>`;
+            }
+            if (social.whatsapp) {
+                const whatsappLink = social.whatsapp.startsWith('+') ? `https://wa.me/${social.whatsapp.replace(/[^0-9]/g, '')}` : social.whatsapp;
+                socialHTML += `<a href="${whatsappLink}" target="_blank" class="social-btn whatsapp"><i class="fab fa-whatsapp"></i></a>`;
+            }
+            if (social.tiktok) {
+                socialHTML += `<a href="${social.tiktok}" target="_blank" class="social-btn tiktok"><i class="fab fa-tiktok"></i></a>`;
+            }
+            if (social.facebook) {
+                socialHTML += `<a href="${social.facebook}" target="_blank" class="social-btn facebook"><i class="fab fa-facebook-f"></i></a>`;
+            }
+            if (social.telegram) {
+                const telegramLink = social.telegram.startsWith('@') ? `https://t.me/${social.telegram.substring(1)}` : social.telegram;
+                socialHTML += `<a href="${telegramLink}" target="_blank" class="social-btn telegram"><i class="fab fa-telegram"></i></a>`;
+            }
+            
+            socialButtons.innerHTML = socialHTML;
+            
+            // Fill booking form selects
+            const therapistSelect = document.getElementById('therapistSelect');
+            therapistSelect.innerHTML = '<option value="">---</option>' + 
+                therapists.map(t => `<option value="${t.name[currentLang] || t.name.ru || t.name}">${t.name[currentLang] || t.name.ru || t.name}</option>`).join('');
+            
+            const serviceSelect = document.getElementById('serviceSelect');
+            serviceSelect.innerHTML = '<option value="">---</option>' + 
+                services.map(s => `<option value="${s.name[currentLang] || s.name.ru || s.name}">${s.name[currentLang] || s.name.ru || s.name} - ₪${s.price}</option>`).join('');
+        }
+
+        // Booking modal functions
+        function openBooking(therapist = '') {
+            document.getElementById('bookingModal').classList.add('active');
+            if (therapist) {
+                document.getElementById('therapistSelect').value = therapist;
+            }
+        }
+
+        function closeBooking() {
+            document.getElementById('bookingModal').classList.remove('active');
+        }
+
+        // Booking form submission
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const bookingData = {
+                name: document.getElementById('clientName').value,
+                phone: document.getElementById('clientPhone').value,
+                therapist: document.getElementById('therapistSelect').value,
+                service: document.getElementById('serviceSelect').value,
+                date: document.getElementById('bookingDate').value,
+                notes: document.getElementById('bookingNotes').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Save booking to localStorage
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            bookings.push(bookingData);
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+            
+            // Show success message
+            alert(currentLang === 'ru' ? 'Спасибо! Ваша заявка принята. Мы свяжемся с вами в ближайшее время.' :
+                  currentLang === 'en' ? 'Thank you! Your request has been received. We will contact you soon.' :
+                  'תודה! הבקשה שלך התקבלה. ניצור איתך קשר בקרוב.');
+            
+            // Reset form and close modal
+            this.reset();
+            closeBooking();
+        });
+
+        // Initialize
+        window.onload = () => {
+            changeLanguage(currentLang);
+            loadData();
+        };
+    </script>
+</body>
+</html>
