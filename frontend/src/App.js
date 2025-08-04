@@ -1,19 +1,43 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
+import ServiceList from './components/ServiceList';
+import BookingForm from './components/BookingForm';
+import './App.css';
 
 function App() {
-  useEffect(() => {
-    console.log('App component loaded successfully');
-    
-    fetch('http://localhost:8000/api/test')
-      .then(res => res.json())
-      .then(data => console.log('API response:', data))
-      .catch(err => console.error('API error:', err));
-  }, []);
+  const [selectedService, setSelectedService] = useState(null);
+
+  const handleServiceSelect = (service) => {
+    setSelectedService(service);
+  };
+
+  const handleCloseForm = () => {
+    setSelectedService(null);
+  };
 
   return (
-    <div>
-      <h1>Сайт массажиста</h1>
-      <p>Проверьте консоль для логов</p>
+    <div className="App">
+      <header>
+        <h1>Профессиональный массаж</h1>
+        <p>Забота о вашем здоровье и комфорте</p>
+      </header>
+      
+      <main>
+        <ServiceList onSelectService={handleServiceSelect} />
+      </main>
+      
+      {selectedService && (
+        <BookingForm
+          service={selectedService}
+          onClose={handleCloseForm}
+          onSuccess={() => {
+            // Можно добавить обновление списка записей
+          }}
+        />
+      )}
+      
+      <footer>
+        <p>&copy; 2025 Массажный салон. Все права защищены.</p>
+      </footer>
     </div>
   );
 }
