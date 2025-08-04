@@ -50,4 +50,5 @@ Desktop.ini
 # Package lock files (опционально)
 # package-lock.json
 # yarn.lock
-"@
+"@package-lock.json
+frontend/package-lock.json
