@@ -1,485 +1,359 @@
 // ===== MASSAGE PRO - MAIN JAVASCRIPT =====
 
-// Global Variables
-let currentBookingStep = 1;
+// Global variables
+let currentStep = 1;
 let selectedService = null;
 let selectedDate = null;
 let selectedTime = null;
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
 
-// Available time slots (can be customized)
-const timeSlots = [
-    '09:00', '10:00', '11:00', '12:00', 
-    '14:00', '15:00', '16:00', '17:00', 
-    '18:00', '19:00', '20:00'
-];
-
-// Services data
-const services = {
-    classic: {
-        name: 'Классический массаж',
-        price: 180,
-        duration: 60,
-        icon: 'fas fa-hand-paper'
-    },
-    sports: {
-        name: 'Спортивный массаж',
-        price: 220,
-        duration: 60,
-        icon: 'fas fa-dumbbell'
-    },
-    relax: {
-        name: 'Релакс массаж',
-        price: 200,
-        duration: 75,
-        icon: 'fas fa-spa'
-    },
-    deep: {
-        name: 'Глубокий массаж',
-        price: 250,
-        duration: 60,
-        icon: 'fas fa-fire'
-    }
+// Default services
+const defaultServices = {
+    classic: { name: 'Классический массаж', price: 180, duration: 60, icon: 'fa-hand-paper' },
+    sports: { name: 'Спортивный массаж', price: 220, duration: 60, icon: 'fa-dumbbell' },
+    relax: { name: 'Релакс массаж', price: 200, duration: 75, icon: 'fa-spa' },
+    deep: { name: 'Глубокий массаж', price: 250, duration: 60, icon: 'fa-fire' }
 };
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        document.getElementById('loading-screen').classList.add('hidden');
+    }, 1000);
+    
     initializeApp();
 });
 
-// Initialize App
 function initializeApp() {
-    showLoadingScreen();
-    setTimeout(() => {
-        hideLoadingScreen();
-        initializeHeader();
-        initializeNavigation();
-        initializeBookingSystem();
-        initializeAnimations();
-        initializeMobileMenu();
-        generateCalendar();
-        loadBookings();
-    }, 2000);
+    loadContent();
+    loadServices();
+    initializeHeader();
+    initializeCalendar();
+    initializeMobileMenu();
+    initializeBookingSystem();
 }
 
-// Loading Screen
-function showLoadingScreen() {
-    const loadingScreen = document.getElementById('loading-screen');
-    if (loadingScreen) {
-        loadingScreen.classList.remove('hidden');
+// Load saved content
+function loadContent() {
+    const savedContent = localStorage.getItem('massageContent');
+    if (savedContent) {
+        const content = JSON.parse(savedContent);
+        
+        // Update business info
+        if (content.businessName) {
+            document.querySelector('.logo-text').textContent = content.businessName;
+        }
+        if (content.businessPhone) {
+            document.getElementById('businessPhone').textContent = content.businessPhone;
+            document.getElementById('phoneLink').href = `tel:${content.businessPhone.replace(/\D/g, '')}`;
+        }
+        if (content.businessAddress) {
+            document.getElementById('businessAddress').textContent = content.businessAddress;
+        }
+        if (content.aboutText) {
+            document.getElementById('aboutText').textContent = content.aboutText;
+        }
+        if (content.whatsappPhone) {
+            document.getElementById('whatsappLink').href = `https://wa.me/${content.whatsappPhone}`;
+        }
     }
-}
-
-function hideLoadingScreen() {
-    const loadingScreen = document.getElementById('loading-screen');
-    if (loadingScreen) {
-        loadingScreen.classList.add('hidden');
-        setTimeout(() => {
-            loadingScreen.style.display = 'none';
-        }, 500);
-    }
-}
-
-// Header functionality
-function initializeHeader() {
-    const header = document.getElementById('header');
     
+    // Load profile image
+    const savedImages = localStorage.getItem('massageImages');
+    if (savedImages) {
+        const images = JSON.parse(savedImages);
+        if (images.profile && images.profile.length > 0) {
+            const profileImg = document.getElementById('profileImage');
+            const placeholder = document.getElementById('profilePlaceholder');
+            profileImg.src = images.profile[0].optimized;
+            profileImg.style.display = 'block';
+            placeholder.style.display = 'none';
+        }
+    }
+}
+
+// Load services
+function loadServices() {
+    const savedServices = localStorage.getItem('massageServices');
+    const services = savedServices ? JSON.parse(savedServices) : defaultServices;
+    
+    // Render services grid
+    const servicesGrid = document.getElementById('servicesGrid');
+    servicesGrid.innerHTML = Object.keys(services).map(key => {
+        const service = services[key];
+        return `
+            <div class="service-card" data-service="${key}" onclick="selectServiceFromCard('${key}')">
+                <i class="fas ${service.icon} service-icon"></i>
+                <h3 class="service-name">${service.name}</h3>
+                <div class="service-price">₪${service.price}</div>
+                <div class="service-duration">${service.duration} минут</div>
+            </div>
+        `;
+    }).join('');
+    
+    // Render service buttons for booking
+    const serviceButtons = document.getElementById('serviceButtons');
+    serviceButtons.innerHTML = Object.keys(services).map(key => {
+        const service = services[key];
+        return `
+            <button class="service-btn" onclick="selectService('${key}')" data-service="${key}">
+                <span class="service-btn-name">${service.name}</span>
+                <span class="service-btn-price">₪${service.price}</span>
+            </button>
+        `;
+    }).join('');
+    
+    window.services = services;
+}
+
+// Header scroll effect
+function initializeHeader() {
     window.addEventListener('scroll', () => {
+        const header = document.getElementById('header');
         if (window.scrollY > 100) {
             header.classList.add('scrolled');
         } else {
             header.classList.remove('scrolled');
         }
     });
-}
-
-// Navigation
-function initializeNavigation() {
-    // Smooth scrolling for navigation links
+    
+    // Smooth scrolling
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-                
-                // Close mobile menu if open
+                target.scrollIntoView({ behavior: 'smooth' });
                 closeMobileMenu();
-                
-                // Update active nav link
-                updateActiveNavLink(this.getAttribute('href'));
             }
         });
     });
-    
-    // Update active nav link on scroll
-    window.addEventListener('scroll', updateActiveNavOnScroll);
 }
 
-function updateActiveNavLink(hash) {
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.classList.remove('active');
-    });
-    
-    const activeLink = document.querySelector(`a[href="${hash}"]`);
-    if (activeLink) {
-        activeLink.classList.add('active');
-    }
-}
-
-function updateActiveNavOnScroll() {
-    const sections = document.querySelectorAll('section[id]');
-    const scrollPos = window.scrollY + 100;
-    
-    sections.forEach(section => {
-        const top = section.offsetTop;
-        const bottom = top + section.offsetHeight;
-        
-        if (scrollPos >= top && scrollPos <= bottom) {
-            updateActiveNavLink(`#${section.id}`);
-        }
-    });
-}
-
-// Mobile Menu
+// Mobile menu
 function initializeMobileMenu() {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const navMenu = document.getElementById('navMenu');
     
-    if (mobileMenuBtn && navMenu) {
-        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-    }
-}
-
-function toggleMobileMenu() {
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const navMenu = document.getElementById('navMenu');
-    
-    mobileMenuBtn.classList.toggle('active');
-    navMenu.classList.toggle('active');
+    mobileMenuBtn.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+    });
 }
 
 function closeMobileMenu() {
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const navMenu = document.getElementById('navMenu');
-    
-    mobileMenuBtn.classList.remove('active');
-    navMenu.classList.remove('active');
+    document.getElementById('navMenu').classList.remove('active');
 }
 
-// Booking System
-function initializeBookingSystem() {
-    // Service selection
-    document.querySelectorAll('.service-option').forEach(option => {
-        option.addEventListener('click', function() {
-            selectServiceOption(this);
-        });
-    });
-    
-    // Calendar navigation
-    const prevButton = document.querySelector('.calendar-nav.prev');
-    const nextButton = document.querySelector('.calendar-nav.next');
-    
-    if (prevButton) prevButton.addEventListener('click', prevMonth);
-    if (nextButton) nextButton.addEventListener('click', nextMonth);
-    
-    // Form validation
-    const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('input', validateContactForm);
-    }
-}
-
-// Service Selection Functions
-function selectService(serviceKey, serviceName, price) {
-    selectedService = {
-        key: serviceKey,
-        name: serviceName,
-        price: price,
-        duration: services[serviceKey].duration
-    };
-    
-    // Update service selector in booking form
-    const serviceOptions = document.querySelectorAll('.service-option');
-    serviceOptions.forEach(option => {
-        option.classList.remove('selected');
-        if (option.dataset.service === serviceKey) {
-            option.classList.add('selected');
-        }
-    });
-    
-    // Enable next step button
-    enableNextStepButton();
-    
-    // Auto scroll to booking section
+// Service selection
+function selectServiceFromCard(key) {
+    selectedService = { key, ...services[key] };
     document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+    
+    // Pre-select service in booking
+    selectService(key);
 }
 
-function selectServiceOption(element) {
-    // Remove previous selection
-    document.querySelectorAll('.service-option').forEach(option => {
-        option.classList.remove('selected');
+function selectService(key) {
+    selectedService = { key, ...services[key] };
+    
+    // Update UI
+    document.querySelectorAll('.service-btn').forEach(btn => {
+        btn.classList.remove('selected');
     });
+    document.querySelector(`[data-service="${key}"]`).classList.add('selected');
     
-    // Add selection to clicked element
-    element.classList.add('selected');
+    // Update summary
+    updateBookingSummary();
     
-    // Get service data
-    const serviceKey = element.dataset.service;
-    selectedService = {
-        key: serviceKey,
-        name: services[serviceKey].name,
-        price: services[serviceKey].price,
-        duration: services[serviceKey].duration
-    };
-    
-    enableNextStepButton();
+    // Enable next button
+    checkStepCompletion();
 }
 
-// Booking Steps Navigation
-function nextBookingStep() {
-    if (currentBookingStep < 4) {
-        // Validate current step
-        if (validateCurrentStep()) {
-            hideCurrentStep();
-            currentBookingStep++;
-            showCurrentStep();
-            updateStepIndicators();
-            
-            if (currentBookingStep === 4) {
-                generateBookingSummary();
-            }
-        }
-    }
+// Calendar
+function initializeCalendar() {
+    renderCalendar();
 }
 
-function prevBookingStep() {
-    if (currentBookingStep > 1) {
-        hideCurrentStep();
-        currentBookingStep--;
-        showCurrentStep();
-        updateStepIndicators();
-    }
-}
-
-function hideCurrentStep() {
-    const currentStepElement = document.querySelector(`.booking-step.step-${currentBookingStep}`);
-    if (currentStepElement) {
-        currentStepElement.classList.remove('active');
-    }
-}
-
-function showCurrentStep() {
-    const currentStepElement = document.querySelector(`.booking-step.step-${currentBookingStep}`);
-    if (currentStepElement) {
-        currentStepElement.classList.add('active');
-    }
+function renderCalendar() {
+    const monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+                       'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+    const dayNames = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
     
-    // Generate time slots when showing step 2
-    if (currentBookingStep === 2) {
-        generateTimeSlots();
-    }
-}
-
-function updateStepIndicators() {
-    document.querySelectorAll('.step').forEach((step, index) => {
-        step.classList.remove('active');
-        if (index + 1 === currentBookingStep) {
-            step.classList.add('active');
-        }
-    });
-}
-
-function validateCurrentStep() {
-    switch(currentBookingStep) {
-        case 1:
-            return selectedService !== null;
-        case 2:
-            return selectedDate !== null && selectedTime !== null;
-        case 3:
-            return validateContactForm();
-        default:
-            return true;
-    }
-}
-
-function enableNextStepButton() {
-    const nextButton = document.querySelector('.step-1 .next-step-btn');
-    if (nextButton) {
-        nextButton.disabled = false;
-    }
-}
-
-// Calendar Functions
-function generateCalendar() {
-    const calendarGrid = document.getElementById('calendarGrid');
-    const calendarTitle = document.getElementById('calendarTitle');
+    document.getElementById('currentMonth').textContent = `${monthNames[currentMonth]} ${currentYear}`;
     
-    if (!calendarGrid || !calendarTitle) return;
-    
-    // Update title
-    const monthNames = [
-        'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-        'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
-    ];
-    calendarTitle.textContent = `${monthNames[currentMonth]} ${currentYear}`;
-    
-    // Clear calendar
-    calendarGrid.innerHTML = '';
-    
-    // Add day headers
-    const dayHeaders = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-    dayHeaders.forEach(day => {
-        const dayHeader = document.createElement('div');
-        dayHeader.classList.add('calendar-day-header');
-        dayHeader.textContent = day;
-        dayHeader.style.fontWeight = 'bold';
-        dayHeader.style.color = 'var(--text-gray)';
-        dayHeader.style.fontSize = '0.8rem';
-        calendarGrid.appendChild(dayHeader);
-    });
-    
-    // Get first day of month and number of days
-    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const firstDay = new Date(currentYear, currentMonth, 1);
+    const lastDay = new Date(currentYear, currentMonth + 1, 0);
     const today = new Date();
     
-    // Adjust first day (Monday = 0, Sunday = 6)
-    const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1;
+    let html = '';
     
-    // Add empty cells for previous month
-    for (let i = 0; i < adjustedFirstDay; i++) {
-        const emptyDay = document.createElement('div');
-        emptyDay.classList.add('calendar-day', 'empty');
-        calendarGrid.appendChild(emptyDay);
+    // Day headers
+    dayNames.forEach(day => {
+        html += `<div class="calendar-header">${day}</div>`;
+    });
+    
+    // Empty cells before first day
+    const startDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
+    for (let i = 0; i < startDay; i++) {
+        html += '<div class="calendar-day disabled"></div>';
     }
     
-    // Add days of current month
-    for (let day = 1; day <= daysInMonth; day++) {
-        const dayElement = document.createElement('div');
-        dayElement.classList.add('calendar-day');
-        dayElement.textContent = day;
+    // Days of month
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+        const date = new Date(currentYear, currentMonth, day);
+        const isToday = date.toDateString() === today.toDateString();
+        const isPast = date < today && !isToday;
+        const isWeekend = date.getDay() === 0 || date.getDay() === 6;
         
-        const currentDate = new Date(currentYear, currentMonth, day);
+        let classes = 'calendar-day';
+        if (isToday) classes += ' today';
+        if (isPast) classes += ' disabled';
         
-        // Check if day is in the past
-        if (currentDate < today.setHours(0, 0, 0, 0)) {
-            dayElement.classList.add('unavailable');
-        } else {
-            dayElement.classList.add('available');
-            dayElement.addEventListener('click', () => selectDate(currentYear, currentMonth, day));
-        }
-        
-        calendarGrid.appendChild(dayElement);
+        html += `<div class="${classes}" ${!isPast ? `onclick="selectDate(${day})"` : ''} data-date="${day}">
+                    ${day}
+                 </div>`;
     }
+    
+    document.getElementById('calendarGrid').innerHTML = html;
 }
 
-function prevMonth() {
-    currentMonth--;
+function changeMonth(direction) {
+    currentMonth += direction;
     if (currentMonth < 0) {
         currentMonth = 11;
         currentYear--;
-    }
-    generateCalendar();
-}
-
-function nextMonth() {
-    currentMonth++;
-    if (currentMonth > 11) {
+    } else if (currentMonth > 11) {
         currentMonth = 0;
         currentYear++;
     }
-    generateCalendar();
+    renderCalendar();
 }
 
-function selectDate(year, month, day) {
-    // Remove previous selection
-    document.querySelectorAll('.calendar-day').forEach(dayEl => {
-        dayEl.classList.remove('selected');
+function selectDate(day) {
+    selectedDate = new Date(currentYear, currentMonth, day);
+    
+    // Update UI
+    document.querySelectorAll('.calendar-day').forEach(el => {
+        el.classList.remove('selected');
     });
+    document.querySelector(`[data-date="${day}"]`).classList.add('selected');
     
-    // Add selection to clicked day
-    event.target.classList.add('selected');
-    
-    selectedDate = new Date(year, month, day);
-    generateTimeSlots();
-    
-    // Enable next step if time is also selected
-    if (selectedTime) {
-        enableStep2NextButton();
-    }
+    // Show time slots
+    showTimeSlots();
+    updateBookingSummary();
+    checkStepCompletion();
 }
 
-function generateTimeSlots() {
-    const timeSlotsContainer = document.getElementById('timeSlots');
-    if (!timeSlotsContainer) return;
+function showTimeSlots() {
+    const timeSlots = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
     
-    timeSlotsContainer.innerHTML = '';
+    const timeSlotsSection = document.getElementById('timeSlots');
+    timeSlotsSection.style.display = 'block';
     
-    timeSlots.forEach(time => {
-        const timeSlot = document.createElement('div');
-        timeSlot.classList.add('time-slot');
-        timeSlot.textContent = time;
-        
-        // Check if slot is available (simplified - always available for demo)
-        timeSlot.classList.add('available');
-        timeSlot.addEventListener('click', () => selectTime(time, timeSlot));
-        
-        timeSlotsContainer.appendChild(timeSlot);
-    });
+    const timeGrid = document.getElementById('timeGrid');
+    timeGrid.innerHTML = timeSlots.map(time => {
+        const isAvailable = checkTimeAvailability(selectedDate, time);
+        return `
+            <button class="time-slot ${!isAvailable ? 'disabled' : ''}" 
+                    onclick="selectTime('${time}')" 
+                    data-time="${time}"
+                    ${!isAvailable ? 'disabled' : ''}>
+                ${time}
+            </button>
+        `;
+    }).join('');
 }
 
-function selectTime(time, element) {
-    // Remove previous selection
-    document.querySelectorAll('.time-slot').forEach(slot => {
-        slot.classList.remove('selected');
-    });
+function checkTimeAvailability(date, time) {
+    // Check existing bookings
+    const bookings = JSON.parse(localStorage.getItem('massageBookings') || '[]');
+    const dateStr = date.toISOString().split('T')[0];
     
-    // Add selection to clicked slot
-    element.classList.add('selected');
-    
+    return !bookings.some(booking => 
+        booking.date === dateStr && 
+        booking.time === time && 
+        booking.status === 'confirmed'
+    );
+}
+
+function selectTime(time) {
     selectedTime = time;
-    enableStep2NextButton();
+    
+    // Update UI
+    document.querySelectorAll('.time-slot').forEach(el => {
+        el.classList.remove('selected');
+    });
+    document.querySelector(`[data-time="${time}"]`).classList.add('selected');
+    
+    updateBookingSummary();
+    checkStepCompletion();
 }
 
-function enableStep2NextButton() {
-    const nextButton = document.querySelector('.step-2 .next-step-btn');
-    if (nextButton && selectedDate && selectedTime) {
-        nextButton.disabled = false;
+// Booking system
+function initializeBookingSystem() {
+    // Form validation
+    const form = document.getElementById('bookingForm');
+    form.addEventListener('input', () => {
+        checkStepCompletion();
+    });
+}
+
+function nextStep() {
+    if (currentStep === 1) {
+        showStep(2);
     }
 }
 
-// Contact Form Validation
-function validateContactForm() {
-    const name = document.getElementById('clientName');
-    const phone = document.getElementById('clientPhone');
-    
-    if (!name || !phone) return false;
-    
-    const isValid = name.value.trim().length > 0 && phone.value.trim().length > 0;
-    
-    // Enable/disable next button based on validation
-    const nextButton = document.querySelector('.step-3 .next-step-btn');
-    if (nextButton) {
-        nextButton.disabled = !isValid;
+function previousStep() {
+    if (currentStep === 2) {
+        showStep(1);
     }
-    
-    return isValid;
 }
 
-// Booking Summary
-function generateBookingSummary() {
-    const summaryContainer = document.getElementById('bookingSummary');
-    if (!summaryContainer) return;
+function showStep(step) {
+    document.querySelectorAll('.booking-step').forEach(el => {
+        el.classList.remove('active');
+    });
+    document.querySelector(`[data-step="${step}"]`).classList.add('active');
     
-    const name = document.getElementById('clientName').value;
-    const phone = document.getElementById('clientPhone').value;
-    const notes = document.getElementById('clientNotes').value;
+    currentStep = step;
     
+    // Update navigation buttons
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const confirmBtn = document.getElementById('confirmBtn');
+    
+    if (step === 1) {
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'inline-flex';
+        confirmBtn.style.display = 'none';
+    } else if (step === 2) {
+        prevBtn.style.display = 'inline-flex';
+        nextBtn.style.display = 'none';
+        confirmBtn.style.display = 'inline-flex';
+    }
+    
+    checkStepCompletion();
+}
+
+function checkStepCompletion() {
+    const nextBtn = document.getElementById('nextBtn');
+    const confirmBtn = document.getElementById('confirmBtn');
+    
+    if (currentStep === 1) {
+        nextBtn.disabled = !selectedService || !selectedDate || !selectedTime;
+    } else if (currentStep === 2) {
+        const name = document.getElementById('clientName').value.trim();
+        const phone = document.getElementById('clientPhone').value.trim();
+        confirmBtn.disabled = !name || !phone;
+    }
+}
+
+function updateBookingSummary() {
+    if (!selectedService || !selectedDate || !selectedTime) return;
+    
+    const summary = document.getElementById('bookingSummary');
     const dateStr = selectedDate.toLocaleDateString('ru-RU', {
         weekday: 'long',
         year: 'numeric',
@@ -487,247 +361,112 @@ function generateBookingSummary() {
         day: 'numeric'
     });
     
-    summaryContainer.innerHTML = `
+    summary.innerHTML = `
+        <h4>Детали записи:</h4>
         <div class="summary-item">
-            <span class="summary-label">Услуга</span>
-            <span class="summary-value">${selectedService.name}</span>
+            <span>Услуга:</span>
+            <span>${selectedService.name}</span>
         </div>
         <div class="summary-item">
-            <span class="summary-label">Дата</span>
-            <span class="summary-value">${dateStr}</span>
+            <span>Дата:</span>
+            <span>${dateStr}</span>
         </div>
         <div class="summary-item">
-            <span class="summary-label">Время</span>
-            <span class="summary-value">${selectedTime}</span>
+            <span>Время:</span>
+            <span>${selectedTime}</span>
         </div>
         <div class="summary-item">
-            <span class="summary-label">Продолжительность</span>
-            <span class="summary-value">${selectedService.duration} минут</span>
+            <span>Длительность:</span>
+            <span>${selectedService.duration} мин</span>
         </div>
         <div class="summary-item">
-            <span class="summary-label">Клиент</span>
-            <span class="summary-value">${name}</span>
-        </div>
-        <div class="summary-item">
-            <span class="summary-label">Телефон</span>
-            <span class="summary-value">${phone}</span>
-        </div>
-        ${notes ? `
-        <div class="summary-item">
-            <span class="summary-label">Примечания</span>
-            <span class="summary-value">${notes}</span>
-        </div>
-        ` : ''}
-        <div class="summary-item">
-            <span class="summary-label">Стоимость</span>
-            <span class="summary-value summary-total">₪${selectedService.price}</span>
+            <span><strong>Стоимость:</strong></span>
+            <span><strong>₪${selectedService.price}</strong></span>
         </div>
     `;
 }
 
-// Confirm Booking
 function confirmBooking() {
-    const bookingData = {
+    const name = document.getElementById('clientName').value.trim();
+    const phone = document.getElementById('clientPhone').value.trim();
+    const notes = document.getElementById('clientNotes').value.trim();
+    
+    if (!name || !phone) return;
+    
+    const booking = {
+        id: 'BK' + Date.now(),
         service: selectedService,
-        date: selectedDate,
+        date: selectedDate.toISOString().split('T')[0],
         time: selectedTime,
-        client: {
-            name: document.getElementById('clientName').value,
-            phone: document.getElementById('clientPhone').value,
-            notes: document.getElementById('clientNotes').value
-        },
-        timestamp: new Date().toISOString(),
-        id: generateBookingId()
+        client: { name, phone, notes },
+        status: 'confirmed',
+        createdAt: new Date().toISOString()
     };
     
-    // Save booking to localStorage
-    saveBooking(bookingData);
+    // Save booking
+    const bookings = JSON.parse(localStorage.getItem('massageBookings') || '[]');
+    bookings.push(booking);
+    localStorage.setItem('massageBookings', JSON.stringify(bookings));
     
-    // Send WhatsApp message (simplified)
-    sendWhatsAppConfirmation(bookingData);
+    // Send WhatsApp notification
+    sendWhatsAppNotification(booking);
     
     // Show success modal
-    showSuccessModal(bookingData);
+    showSuccessModal(booking);
     
-    // Reset booking form
+    // Reset form
     resetBookingForm();
 }
 
-function generateBookingId() {
-    return 'booking_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-}
-
-function saveBooking(bookingData) {
-    let bookings = JSON.parse(localStorage.getItem('massageBookings') || '[]');
-    bookings.push(bookingData);
-    localStorage.setItem('massageBookings', JSON.stringify(bookings));
-}
-
-function loadBookings() {
-    const bookings = JSON.parse(localStorage.getItem('massageBookings') || '[]');
-    return bookings;
-}
-
-function sendWhatsAppConfirmation(bookingData) {
-    const phone = bookingData.client.phone.replace(/\D/g, '');
-    const message = `Здравствуйте, ${bookingData.client.name}!
-
-Ваша запись на массаж подтверждена:
-🗓 ${bookingData.date.toLocaleDateString('ru-RU')}
-⏰ ${bookingData.time}
-💆 ${bookingData.service.name}
-💰 ₪${bookingData.service.price}
-
-Адрес: ул. Дизенгоф 125, Тель-Авив
-Ожидаем вас!
-
-MASSAGE PRO`;
+function sendWhatsAppNotification(booking) {
+    const businessInfo = JSON.parse(localStorage.getItem('massageContent') || '{}');
+    const whatsappPhone = businessInfo.whatsappPhone || '972501234567';
     
-    const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    const dateStr = new Date(booking.date).toLocaleDateString('ru-RU');
+    const message = `Новая запись!
     
-    // Open WhatsApp in new tab (for admin)
+Клиент: ${booking.client.name}
+Телефон: ${booking.client.phone}
+Услуга: ${booking.service.name}
+Дата: ${dateStr}
+Время: ${booking.time}
+${booking.client.notes ? `Примечания: ${booking.client.notes}` : ''}`;
+    
+    const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(message)}`;
+    
+    // Open WhatsApp
     setTimeout(() => {
         window.open(whatsappUrl, '_blank');
-    }, 1000);
+    }, 500);
 }
 
-function showSuccessModal(bookingData) {
+function showSuccessModal(booking) {
     const modal = document.getElementById('successModal');
     const message = document.getElementById('successMessage');
     
-    if (modal && message) {
-        const dateStr = bookingData.date.toLocaleDateString('ru-RU');
-        message.textContent = `Ваша запись на ${dateStr} в ${bookingData.time} успешно создана. Мы отправили подтверждение в WhatsApp.`;
-        modal.classList.add('show');
-    }
+    const dateStr = new Date(booking.date).toLocaleDateString('ru-RU');
+    message.textContent = `Ваша запись на ${dateStr} в ${booking.time} успешно создана! Мы отправили подтверждение в WhatsApp.`;
+    
+    modal.classList.add('show');
 }
 
 function closeModal() {
-    const modal = document.getElementById('successModal');
-    if (modal) {
-        modal.classList.remove('show');
-    }
+    document.getElementById('successModal').classList.remove('show');
 }
 
 function resetBookingForm() {
-    currentBookingStep = 1;
     selectedService = null;
     selectedDate = null;
     selectedTime = null;
+    currentStep = 1;
     
-    // Reset UI
-    document.querySelectorAll('.booking-step').forEach(step => step.classList.remove('active'));
-    document.querySelector('.booking-step.step-1').classList.add('active');
-    
-    document.querySelectorAll('.step').forEach((step, index) => {
-        step.classList.remove('active');
-        if (index === 0) step.classList.add('active');
+    document.getElementById('bookingForm').reset();
+    document.querySelectorAll('.selected').forEach(el => {
+        el.classList.remove('selected');
     });
     
-    document.querySelectorAll('.service-option').forEach(option => {
-        option.classList.remove('selected');
-    });
-    
-    document.getElementById('contactForm').reset();
-    
-    // Reset buttons
-    document.querySelector('.step-1 .next-step-btn').disabled = true;
-    document.querySelector('.step-2 .next-step-btn').disabled = true;
-    document.querySelector('.step-3 .next-step-btn').disabled = true;
+    showStep(1);
+    renderCalendar();
+    document.getElementById('timeSlots').style.display = 'none';
+    document.getElementById('bookingSummary').innerHTML = '';
 }
-
-// Animations
-function initializeAnimations() {
-    // Intersection Observer for fade-in animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-    
-    // Observe elements for animation
-    document.querySelectorAll('.service-card, .contact-item, .credential-item, .stat-box').forEach(el => {
-        el.style.opacity = '0';
-        observer.observe(el);
-    });
-    
-    // Parallax effect for hero
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const parallaxElements = document.querySelectorAll('.hero-layer-1, .hero-layer-2, .hero-layer-3');
-        
-        parallaxElements.forEach((element, index) => {
-            const speed = (index + 1) * 0.1;
-            element.style.transform = `translateY(${scrolled * speed}px)`;
-        });
-    });
-}
-
-// Utility Functions
-function formatPhoneNumber(phone) {
-    // Simple phone formatting for Israeli numbers
-    const cleaned = phone.replace(/\D/g, '');
-    if (cleaned.startsWith('972')) {
-        return `+${cleaned}`;
-    } else if (cleaned.startsWith('0')) {
-        return `+972${cleaned.substring(1)}`;
-    }
-    return `+972${cleaned}`;
-}
-
-function isValidPhoneNumber(phone) {
-    const phoneRegex = /^(\+972|972|0)?[5-9]\d{8}$/;
-    return phoneRegex.test(phone.replace(/\D/g, ''));
-}
-
-// Error Handling
-window.addEventListener('error', function(e) {
-    console.error('JavaScript Error:', e.error);
-    // You can add error reporting here
-});
-
-// Performance optimization
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Throttle function for scroll events
-function throttle(func, limit) {
-    let inThrottle;
-    return function() {
-        const args = arguments;
-        const context = this;
-        if (!inThrottle) {
-            func.apply(context, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    }
-}
-
-// Export functions for global use
-window.selectService = selectService;
-window.nextBookingStep = nextBookingStep;
-window.prevBookingStep = prevBookingStep;
-window.prevMonth = prevMonth;
-window.nextMonth = nextMonth;
-window.confirmBooking = confirmBooking;
-window.closeModal = closeModal;
-
-console.log('🔥 Massage Pro - Main JavaScript Loaded Successfully!');
