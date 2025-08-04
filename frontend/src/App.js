@@ -1,11 +1,9 @@
-Set-Content -Path "src\App.js" -Value @'
 import React, { useEffect } from 'react';
 
 function App() {
   useEffect(() => {
     console.log('App component loaded successfully');
     
-    // Тест подключения к API
     fetch('http://localhost:8000/api/test')
       .then(res => res.json())
       .then(data => console.log('API response:', data))
@@ -21,4 +19,3 @@ function App() {
 }
 
 export default App;
-'@
