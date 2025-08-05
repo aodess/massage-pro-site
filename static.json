@@ -1,0 +1,9 @@
+{
+  "clean_urls": true,
+  "redirects": {
+    "/admin": {
+      "url": "/admin.html",
+      "status": 200
+    }
+  }
+}
