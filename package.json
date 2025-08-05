@@ -1,0 +1,10 @@
+{
+  "name": "massage-workshop",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "npx serve -s . -l 8080"
+  },
+  "dependencies": {
+    "serve": "^14.0.0"
+  }
+}
