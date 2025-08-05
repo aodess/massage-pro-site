@@ -8,7 +8,7 @@
     <!-- Крутые шрифты и библиотеки -->
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;700;900&family=Rubik:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
     
     <style>
         :root {
@@ -170,6 +170,8 @@
             overflow: hidden;
             transition: all 0.3s;
             text-transform: uppercase;
+            cursor: pointer;
+            border: none;
         }
 
         .cta-button::before {
@@ -310,12 +312,8 @@
             border-radius: 30px;
             padding: 40px;
             text-align: center;
-            transform: scale(0.9);
-            transition: all 0.3s;
-        }
-
-        .service-slide.swiper-slide-active {
-            transform: scale(1);
+            height: auto;
+            min-height: 350px;
         }
 
         .service-icon {
@@ -544,6 +542,19 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .lang-switcher {
@@ -604,6 +615,21 @@
             transform: scale(1.2) rotate(180deg);
             background: var(--accent);
         }
+
+        /* Loading spinner */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -628,7 +654,7 @@
         <div class="hero-content">
             <h1 data-translate="title">МАССАЖНАЯ МАСТЕРСКАЯ</h1>
             <p class="tagline" data-translate="tagline">Искусство исцеления в каждом прикосновении</p>
-            <a href="#booking" class="cta-button" onclick="openBooking()" data-translate="book">ЗАПИСАТЬСЯ СЕЙЧАС</a>
+            <button class="cta-button" onclick="openBooking()" data-translate="book">ЗАПИСАТЬСЯ СЕЙЧАС</button>
         </div>
     </section>
 
@@ -636,7 +662,10 @@
     <section class="therapists" id="therapists">
         <h2 class="section-title" data-translate="therapists">НАШИ МАСТЕРА</h2>
         <div class="therapists-grid" id="therapistsGrid">
-            <!-- Динамически загружается -->
+            <div class="empty-state">
+                <i class="fas fa-spinner loading"></i>
+                <p>Загрузка...</p>
+            </div>
         </div>
     </section>
 
@@ -655,7 +684,10 @@
     <section class="gallery" id="gallery">
         <h2 class="section-title" data-translate="gallery">ГАЛЕРЕЯ</h2>
         <div class="gallery-grid" id="galleryGrid">
-            <!-- Динамически загружается -->
+            <div class="empty-state">
+                <i class="fas fa-images"></i>
+                <p>Галерея пуста</p>
+            </div>
         </div>
     </section>
 
@@ -682,7 +714,7 @@
             <!-- Динамически загружается -->
         </div>
         
-        <a href="#booking" class="cta-button" onclick="openBooking()" data-translate="book">ЗАПИСАТЬСЯ</a>
+        <button class="cta-button" onclick="openBooking()" data-translate="book">ЗАПИСАТЬСЯ</button>
     </section>
 
     <!-- Booking Modal -->
@@ -702,13 +734,13 @@
                 <div class="form-group">
                     <label data-translate="selectTherapist">Выберите мастера</label>
                     <select id="therapistSelect">
-                        <!-- Динамически загружается -->
+                        <option value="">---</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label data-translate="selectService">Выберите услугу</label>
                     <select id="serviceSelect">
-                        <!-- Динамически загружается -->
+                        <option value="">---</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -730,56 +762,60 @@
     </a>
 
     <!-- Scripts -->
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
+        // Инициализация переменных
+        let currentLang = localStorage.getItem('language') || 'ru';
+        let swiperInstance = null;
+
         // Particles config
-        particlesJS('particles-js', {
-            particles: {
-                number: { value: 80 },
-                color: { value: '#FFD700' },
-                shape: { type: 'circle' },
-                opacity: { value: 0.5, random: false },
-                size: { value: 3, random: true },
-                line_linked: {
-                    enable: true,
-                    distance: 150,
-                    color: '#FFD700',
-                    opacity: 0.4,
-                    width: 1
+        if (typeof particlesJS !== 'undefined') {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 80 },
+                    color: { value: '#FFD700' },
+                    shape: { type: 'circle' },
+                    opacity: { value: 0.5, random: false },
+                    size: { value: 3, random: true },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: '#FFD700',
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: 'none',
+                        random: false,
+                        straight: false,
+                        out_mode: 'out',
+                        bounce: false
+                    }
                 },
-                move: {
-                    enable: true,
-                    speed: 2,
-                    direction: 'none',
-                    random: false,
-                    straight: false,
-                    out_mode: 'out',
-                    bounce: false
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: {
+                        onhover: { enable: true, mode: 'repulse' },
+                        onclick: { enable: true, mode: 'push' },
+                        resize: true
+                    }
                 }
-            },
-            interactivity: {
-                detect_on: 'canvas',
-                events: {
-                    onhover: { enable: true, mode: 'repulse' },
-                    onclick: { enable: true, mode: 'push' },
-                    resize: true
-                }
-            }
-        });
+            });
+        }
 
         // Language translations
         const translations = {
             ru: {
                 title: 'МАССАЖНАЯ МАСТЕРСКАЯ',
                 tagline: 'Искусство исцеления в каждом прикосновении',
-                book: 'ЗАПИСАТЬСЯ СЕЙЧАС',
+                book: 'ЗАПИСАТЬСЯ',
                 therapists: 'НАШИ МАСТЕРА',
                 services: 'УСЛУГИ',
                 gallery: 'ГАЛЕРЕЯ',
                 contact: 'КОНТАКТЫ',
-                address: 'Тель-Авив, ул. Дизенгоф 123',
-                hours: '9:00 - 21:00',
                 bookingTitle: 'Запись на массаж',
                 name: 'Ваше имя',
                 phone: 'Телефон',
@@ -797,8 +833,6 @@
                 services: 'SERVICES',
                 gallery: 'GALLERY',
                 contact: 'CONTACT',
-                address: 'Tel Aviv, Dizengoff St. 123',
-                hours: '9:00 AM - 9:00 PM',
                 bookingTitle: 'Book a Massage',
                 name: 'Your Name',
                 phone: 'Phone',
@@ -816,8 +850,6 @@
                 services: 'שירותים',
                 gallery: 'גלריה',
                 contact: 'צור קשר',
-                address: 'תל אביב, רחוב דיזנגוף 123',
-                hours: '9:00 - 21:00',
                 bookingTitle: 'הזמנת עיסוי',
                 name: 'שם',
                 phone: 'טלפון',
@@ -829,146 +861,189 @@
             }
         };
 
-        let currentLang = localStorage.getItem('language') || 'ru';
-
+        // Функция смены языка
         function changeLanguage(lang) {
             currentLang = lang;
             localStorage.setItem('language', lang);
             
+            // Обновляем активную кнопку
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
+            // Переводим тексты
             document.querySelectorAll('[data-translate]').forEach(el => {
                 const key = el.getAttribute('data-translate');
-                el.textContent = translations[lang][key];
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
             });
             
+            // Меняем направление текста для иврита
             document.documentElement.lang = lang;
             document.dir = lang === 'he' ? 'rtl' : 'ltr';
             
-            // Reload data with new language
+            // Перезагружаем данные
             loadData();
         }
 
-        // Load data from localStorage
+        // Загрузка демо-данных если база пустая
+        function loadDemoDataIfEmpty() {
+            const therapists = localStorage.getItem('therapists');
+            const services = localStorage.getItem('services');
+            const gallery = localStorage.getItem('gallery');
+            
+            if (!therapists || JSON.parse(therapists).length === 0) {
+                const demoTherapists = [
+                    {
+                        name: {ru: 'Александр', en: 'Alexander', he: 'אלכסנדר'},
+                        specialty: {ru: 'Спортивный массаж', en: 'Sports Massage', he: 'עיסוי ספורט'},
+                        price: '350',
+                        image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400'
+                    },
+                    {
+                        name: {ru: 'Мария', en: 'Maria', he: 'מריה'},
+                        specialty: {ru: 'Классический массаж', en: 'Classic Massage', he: 'עיסוי קלאסי'},
+                        price: '300',
+                        image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400'
+                    },
+                    {
+                        name: {ru: 'Елена', en: 'Elena', he: 'אלנה'},
+                        specialty: {ru: 'Тайский массаж', en: 'Thai Massage', he: 'עיסוי תאילנדי'},
+                        price: '400',
+                        image: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=400'
+                    }
+                ];
+                localStorage.setItem('therapists', JSON.stringify(demoTherapists));
+            }
+            
+            if (!services || JSON.parse(services).length === 0) {
+                const demoServices = [
+                    {
+                        name: {ru: 'Классический массаж', en: 'Classic Massage', he: 'עיסוי קלאסי'},
+                        description: {ru: 'Расслабляющий массаж всего тела', en: 'Relaxing full body massage', he: 'עיסוי מרגיע לכל הגוף'},
+                        price: '250',
+                        duration: '60 мин',
+                        icon: 'fa-spa'
+                    },
+                    {
+                        name: {ru: 'Спортивный массаж', en: 'Sports Massage', he: 'עיסוי ספורט'},
+                        description: {ru: 'Глубокая проработка мышц', en: 'Deep muscle therapy', he: 'טיפול עמוק בשרירים'},
+                        price: '350',
+                        duration: '90 мин',
+                        icon: 'fa-dumbbell'
+                    },
+                    {
+                        name: {ru: 'Тайский массаж', en: 'Thai Massage', he: 'עיסוי תאילנדי'},
+                        description: {ru: 'Традиционная восточная техника', en: 'Traditional oriental technique', he: 'טכניקה מזרחית מסורתית'},
+                        price: '450',
+                        duration: '120 мин',
+                        icon: 'fa-yin-yang'
+                    }
+                ];
+                localStorage.setItem('services', JSON.stringify(demoServices));
+            }
+            
+            if (!gallery || JSON.parse(gallery).length === 0) {
+                const demoGallery = [
+                    {type: 'image', url: 'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?w=600'},
+                    {type: 'image', url: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=600'},
+                    {type: 'image', url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600'}
+                ];
+                localStorage.setItem('gallery', JSON.stringify(demoGallery));
+            }
+
+            // Дефолтные соцсети
+            if (!localStorage.getItem('social')) {
+                localStorage.setItem('social', JSON.stringify({
+                    instagram: 'https://instagram.com/massage_workshop',
+                    whatsapp: '+972501234567'
+                }));
+            }
+        }
+
+        // Основная функция загрузки данных
         function loadData() {
+            // Сначала загружаем демо-данные если нужно
+            loadDemoDataIfEmpty();
+            
+            // Получаем данные
             const therapists = JSON.parse(localStorage.getItem('therapists') || '[]');
             const services = JSON.parse(localStorage.getItem('services') || '[]');
             const gallery = JSON.parse(localStorage.getItem('gallery') || '[]');
             const social = JSON.parse(localStorage.getItem('social') || '{}');
             const settings = JSON.parse(localStorage.getItem('settings') || '{}');
             
-            // Update contact info
+            // Обновляем контакты
             if (settings.address) document.getElementById('contactAddress').textContent = settings.address;
             if (settings.phone) document.getElementById('contactPhone').textContent = settings.phone;
             if (settings.hours) document.getElementById('contactHours').textContent = settings.hours;
             
-            // Default data if empty
-            if (therapists.length === 0) {
-                therapists.push(
-                    {
-                        name: { ru: 'Александр', en: 'Alexander', he: 'אלכסנדר' },
-                        specialty: { ru: 'Спортивный массаж', en: 'Sports Massage', he: 'עיסוי ספורט' },
-                        price: '350',
-                        image: 'https://source.unsplash.com/300x300/?man,massage'
-                    },
-                    {
-                        name: { ru: 'Мария', en: 'Maria', he: 'מריה' },
-                        specialty: { ru: 'Классический массаж', en: 'Classic Massage', he: 'עיסוי קלאסי' },
-                        price: '300',
-                        image: 'https://source.unsplash.com/300x300/?woman,spa'
-                    }
-                );
-                localStorage.setItem('therapists', JSON.stringify(therapists));
-            }
-            
-            if (services.length === 0) {
-                services.push(
-                    {
-                        name: { ru: 'Классический массаж', en: 'Classic Massage', he: 'עיסוי קלאסי' },
-                        description: { ru: 'Расслабляющий массаж всего тела', en: 'Relaxing full body massage', he: 'עיסוי מרגיע לכל הגוף' },
-                        price: '300',
-                        duration: '60 мин',
-                        icon: 'fa-spa'
-                    },
-                    {
-                        name: { ru: 'Спортивный массаж', en: 'Sports Massage', he: 'עיסוי ספורט' },
-                        description: { ru: 'Глубокая проработка мышц', en: 'Deep muscle therapy', he: 'טיפול עמוק בשרירים' },
-                        price: '400',
-                        duration: '90 мин',
-                        icon: 'fa-dumbbell'
-                    },
-                    {
-                        name: { ru: 'Тайский массаж', en: 'Thai Massage', he: 'עיסוי תאילנדי' },
-                        description: { ru: 'Традиционная восточная техника', en: 'Traditional oriental technique', he: 'טכניקה מזרחית מסורתית' },
-                        price: '450',
-                        duration: '120 мин',
-                        icon: 'fa-yin-yang'
-                    }
-                );
-                localStorage.setItem('services', JSON.stringify(services));
-            }
-            
-            if (gallery.length === 0) {
-                gallery.push(
-                    { type: 'image', url: 'https://source.unsplash.com/400x300/?massage,spa' },
-                    { type: 'image', url: 'https://source.unsplash.com/400x300/?wellness,therapy' },
-                    { type: 'image', url: 'https://source.unsplash.com/400x300/?relaxation,health' }
-                );
-                localStorage.setItem('gallery', JSON.stringify(gallery));
-            }
-            
-            // Render therapists
+            // Рендерим массажистов
             const therapistsGrid = document.getElementById('therapistsGrid');
-            therapistsGrid.innerHTML = therapists.map(t => `
-                <div class="therapist-card">
-                    <img src="${t.image}" alt="${t.name[currentLang] || t.name.ru || t.name}" class="therapist-img">
-                    <h3 class="therapist-name">${t.name[currentLang] || t.name.ru || t.name}</h3>
-                    <p class="therapist-specialty">${t.specialty[currentLang] || t.specialty.ru || t.specialty}</p>
-                    <p class="therapist-price">₪${t.price}</p>
-                    <a href="#booking" class="cta-button" onclick="openBooking('${t.name[currentLang] || t.name.ru || t.name}')">${translations[currentLang].book}</a>
-                </div>
-            `).join('');
+            if (therapists.length > 0) {
+                therapistsGrid.innerHTML = therapists.map(t => `
+                    <div class="therapist-card">
+                        <img src="${t.image}" alt="${t.name[currentLang] || t.name.ru || t.name}" class="therapist-img" onerror="this.src='https://via.placeholder.com/150'">
+                        <h3 class="therapist-name">${t.name[currentLang] || t.name.ru || t.name}</h3>
+                        <p class="therapist-specialty">${t.specialty[currentLang] || t.specialty.ru || t.specialty}</p>
+                        <p class="therapist-price">₪${t.price}</p>
+                        <button class="cta-button" onclick="openBooking('${t.name[currentLang] || t.name.ru || t.name}')">${translations[currentLang].book}</button>
+                    </div>
+                `).join('');
+            } else {
+                therapistsGrid.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>Массажисты не добавлены</p></div>';
+            }
             
-            // Render services
+            // Рендерим услуги
             const servicesSlider = document.getElementById('servicesSlider');
-            servicesSlider.innerHTML = services.map(s => `
-                <div class="swiper-slide service-slide">
-                    <i class="fas ${s.icon} service-icon"></i>
-                    <h3>${s.name[currentLang] || s.name.ru || s.name}</h3>
-                    <p>${s.description[currentLang] || s.description.ru || s.description}</p>
-                    <p style="font-size: 2rem; font-weight: bold; color: var(--accent);">₪${s.price}</p>
-                    <p style="color: #999;">${s.duration}</p>
-                </div>
-            `).join('');
-            
-            // Initialize Swiper
-            new Swiper('.services-carousel', {
-                slidesPerView: 1,
-                spaceBetween: 30,
-                loop: true,
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true
-                },
-                breakpoints: {
-                    640: { slidesPerView: 2 },
-                    1024: { slidesPerView: 3 }
+            if (services.length > 0) {
+                servicesSlider.innerHTML = services.map(s => `
+                    <div class="swiper-slide service-slide">
+                        <i class="fas ${s.icon} service-icon"></i>
+                        <h3>${s.name[currentLang] || s.name.ru || s.name}</h3>
+                        <p>${s.description[currentLang] || s.description.ru || s.description}</p>
+                        <p style="font-size: 2rem; font-weight: bold; color: var(--accent);">₪${s.price}</p>
+                        <p style="color: #999;">${s.duration}</p>
+                    </div>
+                `).join('');
+                
+                // Инициализируем или обновляем Swiper
+                if (swiperInstance) {
+                    swiperInstance.destroy();
                 }
-            });
-            
-            // Render gallery
-            const galleryGrid = document.getElementById('galleryGrid');
-            galleryGrid.innerHTML = gallery.map(g => `
-                <div class="gallery-item">
-                    ${g.type === 'image' 
-                        ? `<img src="${g.url}" alt="Gallery">` 
-                        : `<video src="${g.url}" controls></video>`
+                swiperInstance = new Swiper('.services-carousel', {
+                    slidesPerView: 1,
+                    spaceBetween: 30,
+                    loop: services.length > 3,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true
+                    },
+                    breakpoints: {
+                        640: { slidesPerView: 2 },
+                        1024: { slidesPerView: 3 }
                     }
-                </div>
-            `).join('');
+                });
+            } else {
+                servicesSlider.innerHTML = '<div class="empty-state"><i class="fas fa-spa"></i><p>Услуги не добавлены</p></div>';
+            }
             
-            // Render social buttons
+            // Рендерим галерею
+            const galleryGrid = document.getElementById('galleryGrid');
+            if (gallery.length > 0) {
+                galleryGrid.innerHTML = gallery.map(g => `
+                    <div class="gallery-item">
+                        ${g.type === 'image' 
+                            ? `<img src="${g.url}" alt="Gallery" onerror="this.src='https://via.placeholder.com/300'">` 
+                            : `<video src="${g.url}" controls></video>`
+                        }
+                    </div>
+                `).join('');
+            } else {
+                galleryGrid.innerHTML = '<div class="empty-state"><i class="fas fa-images"></i><p>Галерея пуста</p></div>';
+            }
+            
+            // Рендерим социальные сети
             const socialButtons = document.getElementById('socialButtons');
             let socialHTML = '';
             
@@ -990,9 +1065,9 @@
                 socialHTML += `<a href="${telegramLink}" target="_blank" class="social-btn telegram"><i class="fab fa-telegram"></i></a>`;
             }
             
-            socialButtons.innerHTML = socialHTML;
+            socialButtons.innerHTML = socialHTML || '<p style="color: #999;">Социальные сети не добавлены</p>';
             
-            // Fill booking form selects
+            // Заполняем селекты в форме бронирования
             const therapistSelect = document.getElementById('therapistSelect');
             therapistSelect.innerHTML = '<option value="">---</option>' + 
                 therapists.map(t => `<option value="${t.name[currentLang] || t.name.ru || t.name}">${t.name[currentLang] || t.name.ru || t.name}</option>`).join('');
@@ -1002,7 +1077,7 @@
                 services.map(s => `<option value="${s.name[currentLang] || s.name.ru || s.name}">${s.name[currentLang] || s.name.ru || s.name} - ₪${s.price}</option>`).join('');
         }
 
-        // Booking modal functions
+        // Функции модального окна
         function openBooking(therapist = '') {
             document.getElementById('bookingModal').classList.add('active');
             if (therapist) {
@@ -1014,7 +1089,7 @@
             document.getElementById('bookingModal').classList.remove('active');
         }
 
-        // Booking form submission
+        // Обработка формы бронирования
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -1028,26 +1103,49 @@
                 timestamp: new Date().toISOString()
             };
             
-            // Save booking to localStorage
+            // Сохраняем заявку
             const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
             bookings.push(bookingData);
             localStorage.setItem('bookings', JSON.stringify(bookings));
             
-            // Show success message
+            // Показываем сообщение
             alert(currentLang === 'ru' ? 'Спасибо! Ваша заявка принята. Мы свяжемся с вами в ближайшее время.' :
                   currentLang === 'en' ? 'Thank you! Your request has been received. We will contact you soon.' :
                   'תודה! הבקשה שלך התקבלה. ניצור איתך קשר בקרוב.');
             
-            // Reset form and close modal
+            // Очищаем форму и закрываем
             this.reset();
             closeBooking();
         });
 
-        // Initialize
-        window.onload = () => {
-            changeLanguage(currentLang);
+        // Слушаем изменения в localStorage для синхронизации между вкладками
+        window.addEventListener('storage', function(e) {
+            if (e.key && ['therapists', 'services', 'gallery', 'social', 'settings'].includes(e.key)) {
+                loadData();
+            }
+        });
+
+        // Инициализация при загрузке
+        window.addEventListener('DOMContentLoaded', function() {
+            // Устанавливаем текущий язык
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if (btn.textContent.toLowerCase() === currentLang || 
+                    (btn.textContent === 'עב' && currentLang === 'he')) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Применяем переводы
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.getAttribute('data-translate');
+                if (translations[currentLang][key]) {
+                    el.textContent = translations[currentLang][key];
+                }
+            });
+            
+            // Загружаем данные
             loadData();
-        };
+        });
     </script>
 </body>
 </html>
