@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Access</title>
+    <style>
+        body { background: #0a0a0a; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-box { background: #1a1a1a; padding: 40px; border-radius: 10px; border: 2px solid #FFD700; }
+        input { padding: 10px; margin: 10px 0; width: 200px; background: #333; border: 1px solid #666; color: white; }
+        button { padding: 10px 30px; background: #FFD700; border: none; color: black; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <input type="password" id="pass" placeholder="Пароль" onkeypress="if(event.key==='Enter')check()">
+        <button onclick="check()">Войти</button>
+    </div>
+    <script>
+        function check() {
+            if(document.getElementById('pass').value === 'massage2024') {
+                localStorage.setItem('auth', 'true');
+                window.location.href = 'panel-2024-xyz.html';
+            }
+        }
+    </script>
+</body>
+</html>
